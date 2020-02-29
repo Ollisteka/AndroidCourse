@@ -12,7 +12,7 @@ const val EXTRA_COUNTER = "com.example.androidcourse.COUNTER"
 const val LOG_TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
-    private var counter: Int = 0;
+    private var counter: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
