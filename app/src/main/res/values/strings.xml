@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Трекер привычек</string>
+    <string name="addHabit">Добавить привычку</string>
 </resources>
