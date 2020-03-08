@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Трекер привычек</string>
     <string name="addHabit">Добавить привычку</string>
+    <string name="habitName">Название привычки</string>
+    <string name="habitNameHint">Ложиться в 10 вечера</string>
+    <string name="habitDescription">Описание привычки</string>
+    <string name="save">Сохранить</string>
 </resources>

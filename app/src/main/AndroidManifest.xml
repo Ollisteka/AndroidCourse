@@ -10,7 +10,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-                  android:launchMode="singleTop">
+                  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SquareActivity"
+        <activity android:name=".EditHabitActivity"
                   android:parentActivityName=".MainActivity">
         </activity>
 
