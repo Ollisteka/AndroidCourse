@@ -2,9 +2,14 @@ package com.example.androidcourse
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
+import android.view.View.OnFocusChangeListener
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+
 
 const val EXTRA_NEW_HABIT = "com.example.androidcourse.NEW_HABIT"
 
@@ -27,12 +32,25 @@ class EditHabitActivity : AppCompatActivity() {
                 startActivity(sendIntent)
             }
         }
+
+        habitName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                saveButton.isEnabled = !TextUtils.isEmpty(s)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        habitName.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus)
+                habitName.error = if (TextUtils.isEmpty((view as EditText).text)) "Поле обязательно" else null
+        }
     }
 
     private fun getHabit(): Habit {
-        var name = habitName.text.toString()
-        if (name == "")
-            name = habitName.hint.toString()
+        val name = habitName.text.toString()
         val description = habitDescription.text.toString()
 
         return Habit(name, description)

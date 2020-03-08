@@ -8,11 +8,25 @@
         android:orientation="vertical"
         tools:context=".EditHabitActivity">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/habitName"
-            android:textSize="20sp"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/habitName"
+                android:textSize="20sp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="@color/colorAccent"
+                android:layout_marginStart="4sp"
+                android:layout_marginLeft="4sp"
+                android:textSize="20sp"/>
+    </LinearLayout>
+
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -22,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.75"
-                android:textSize="24sp"
+                android:textSize="@dimen/text_size"
                 android:hint="@string/habitNameHint"
                 android:importantForAutofill="no"
                 android:inputType="text"/>
@@ -42,8 +56,8 @@
             android:id="@+id/habitDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:hint="@string/habitNameHint"
+            android:textSize="@dimen/text_size"
+            android:hint="@string/habitDescription"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"/>
 
@@ -51,5 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:enabled="false"
             android:text="@string/save"/>
 </LinearLayout>
