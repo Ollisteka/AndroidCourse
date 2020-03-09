@@ -2,6 +2,7 @@ package com.example.androidcourse
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,8 +38,9 @@ class MyHabitRecyclerViewAdapter(
     override fun getItemCount(): Int = habits.size
 
     inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener {
-        val nameView: TextView = itemView.name
-        val descriptionView: TextView = itemView.description
+        private val nameView: TextView = itemView.name
+        private val descriptionView: TextView = itemView.description
+        private val colorView: View = itemView.color
 
         override fun onClick(view: View?, position: Int) {
 
@@ -51,6 +53,7 @@ class MyHabitRecyclerViewAdapter(
         fun bind(habit: Habit) {
             nameView.text = habit.name
             descriptionView.text = habit.description
+            colorView.setBackgroundColor(Color.parseColor(habit.color))
         }
     }
 }

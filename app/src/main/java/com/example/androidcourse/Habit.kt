@@ -40,6 +40,6 @@ class Habit(
     val habitType: HabitType = HabitType.Health,
     val repetitions: Int = 10,
     val periodicity: Int = 2,
-    val color: String = "red",
+    val color: String = "#388E3C",
     val id: UUID = UUID.randomUUID()
 ) : Parcelable
