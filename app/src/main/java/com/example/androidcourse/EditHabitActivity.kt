@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.View.OnFocusChangeListener
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 
@@ -19,6 +20,7 @@ class EditHabitActivity : AppCompatActivity() {
     private lateinit var habitName: EditText
     private lateinit var habitDescription: EditText
     private lateinit var habitPrioritySpinner: Spinner
+    private lateinit var habitTypeRadio: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +53,15 @@ class EditHabitActivity : AppCompatActivity() {
         }
 
         habitPrioritySpinner = findViewById(R.id.habitPriority)
+        habitTypeRadio = findViewById(R.id.habitTypeRadio)
     }
 
     private fun getHabit(): Habit {
         val name = habitName.text.toString()
         val description = habitDescription.text.toString()
         val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
+        val type = HabitType.getByValue(habitTypeRadio.checkedRadioButtonId);
 
-        return Habit(name, description, priority)
+        return Habit(name, description, priority, type)
     }
 }

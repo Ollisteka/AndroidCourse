@@ -66,6 +66,30 @@
         </Spinner>
     </LinearLayout>
 
+
+    <TextView
+            android:text="@string/habitType"
+            android:layout_marginTop="8dp"
+            style="@style/TextViewStyle"/>
+
+    <RadioGroup
+            android:id="@+id/habitTypeRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+        <RadioButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:checked="true"
+                     android:text="@string/radio_study"/>
+        <RadioButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/radio_health"/>
+        <RadioButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="@string/radio_beauty"/>
+    </RadioGroup>
+
     <Button android:id="@+id/saveHabitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

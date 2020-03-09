@@ -6,6 +6,10 @@
     <string name="habitDescription">Описание привычки</string>
     <string name="save">Сохранить</string>
     <string name="habitPriority">Приоритет привычки</string>
+    <string name="habitType">Тип привычки</string>
+    <string name="radio_study">Учёба</string>
+    <string name="radio_health">Здоровье</string>
+    <string name="radio_beauty">Красота</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
