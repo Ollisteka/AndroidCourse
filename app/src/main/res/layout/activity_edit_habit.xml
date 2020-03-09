@@ -12,19 +12,17 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal">
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/habitName"
-                android:textSize="20sp"/>
+                android:layout_marginTop="0dp"
+                style="@style/TextViewStyle"/>
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="*"
                 android:textColor="@color/accent"
                 android:layout_marginStart="4sp"
                 android:layout_marginLeft="4sp"
-                android:textSize="20sp"/>
+                android:layout_marginTop="0dp"
+                style="@style/TextViewStyle"/>
     </LinearLayout>
 
 
@@ -47,11 +45,8 @@
     </LinearLayout>
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/habitDescription"
-            android:textSize="20sp"
-            android:layout_marginTop="8dp"/>
+            style="@style/TextViewStyle"/>
     <EditText
             android:id="@+id/habitDescription"
             android:layout_width="wrap_content"
@@ -60,6 +55,21 @@
             android:hint="@string/habitDescription"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView
+                android:text="@string/habitPriority"
+                style="@style/TextViewStyle"/>
+        <Spinner
+                android:id="@+id/habitPriority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/priority_array">
+        </Spinner>
+
+    </LinearLayout>
 
     <Button android:id="@+id/saveHabitButton"
             android:layout_width="match_parent"

@@ -5,4 +5,11 @@
     <string name="habitNameHint">Ложиться в 10 вечера</string>
     <string name="habitDescription">Описание привычки</string>
     <string name="save">Сохранить</string>
+    <string name="habitPriority">Приоритет привычки</string>
+
+    <string-array name="priority_array">
+        <item>Низкий</item>
+        <item>Средний</item>
+        <item>Высокий</item>
+    </string-array>
 </resources>

@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.View.OnFocusChangeListener
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -17,6 +18,7 @@ class EditHabitActivity : AppCompatActivity() {
 
     private lateinit var habitName: EditText
     private lateinit var habitDescription: EditText
+    private lateinit var habitPrioritySpinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +49,15 @@ class EditHabitActivity : AppCompatActivity() {
             if (!hasFocus)
                 habitName.error = if (TextUtils.isEmpty((view as EditText).text)) "Поле обязательно" else null
         }
+
+        habitPrioritySpinner = findViewById(R.id.habitPriority)
     }
 
     private fun getHabit(): Habit {
         val name = habitName.text.toString()
         val description = habitDescription.text.toString()
+        val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
 
-        return Habit(name, description)
+        return Habit(name, description, priority)
     }
 }

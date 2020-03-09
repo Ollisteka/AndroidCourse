@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private var habits: MutableList<Habit> = mutableListOf(
-        Habit("Привычка #1", "Описание", 1, HabitType.Health, 10, "white")
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
