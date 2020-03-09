@@ -6,10 +6,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View.OnFocusChangeListener
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -21,7 +18,9 @@ class EditHabitActivity : AppCompatActivity() {
     private lateinit var habitNameEdit: EditText
     private lateinit var habitDescriptionEdit: EditText
     private lateinit var habitRepetitions: EditText
+    private lateinit var habitRepetitionsLabel: TextView
     private lateinit var habitPeriodicity: EditText
+    private lateinit var habitPeriodicityLabel: TextView
     private lateinit var habitPrioritySpinner: Spinner
     private lateinit var habitTypeRadio: RadioGroup
     private var habitId: UUID? = null
@@ -62,9 +61,33 @@ class EditHabitActivity : AppCompatActivity() {
         habitPrioritySpinner = findViewById(R.id.habitPriority)
         habitTypeRadio = findViewById(R.id.habitTypeRadio)
         habitRepetitions = findViewById(R.id.habitRepetitions)
+        habitRepetitionsLabel = findViewById(R.id.habitRepetitionLabel)
+        habitRepetitions.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus)
+                setRepetitionLabel()
+        }
         habitPeriodicity = findViewById(R.id.habitPeriodicity)
+        habitPeriodicityLabel = findViewById(R.id.habitPeriodicityLabel)
+        habitPeriodicity.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus)
+                setPeriodicityLabel()
+        }
 
         fillForEdit()
+        setRepetitionLabel()
+        setPeriodicityLabel()
+    }
+
+    private fun setRepetitionLabel() {
+        val pluralTimes = resources.getStringArray(R.array.times_plurals)
+        val correctedTimes = TextHelpers.getPluralWord(getRepetitions(), pluralTimes)
+        habitRepetitionsLabel.text = getString(R.string.timesEvery, correctedTimes)
+    }
+
+    private fun setPeriodicityLabel() {
+        val pluralDays = resources.getStringArray(R.array.days_plurals)
+        val correctedPeriodicity = TextHelpers.getPluralWord(getPeriodicity(), pluralDays)
+        habitPeriodicityLabel.text = correctedPeriodicity
     }
 
     private fun fillForEdit() {
@@ -106,14 +129,19 @@ class EditHabitActivity : AppCompatActivity() {
                 else -> throw Exception("You forgot to create new HabitType or handle it here")
             }
 
-        val repetitions = getValueOrDefault(habitRepetitions, R.string.numberHint).toInt()
-        val periodicity = getValueOrDefault(habitPeriodicity, R.string.numberHint).toInt()
-
         val id = habitId ?: UUID.randomUUID()
-        return Habit(name, description, priority, type, repetitions, periodicity, id = id)
+        return Habit(name, description, priority, type, getRepetitions(), getPeriodicity(), id = id)
     }
 
     private fun getValueOrDefault(view: EditText, defaultResourceId: Int): String {
         return view.text.toString().let { if (TextUtils.isEmpty(it)) getString(defaultResourceId) else it }
+    }
+
+    private fun getRepetitions(): Int {
+        return getValueOrDefault(habitRepetitions, R.string.numberHint).toInt()
+    }
+
+    private fun getPeriodicity(): Int {
+        return getValueOrDefault(habitPeriodicity, R.string.numberHint).toInt()
     }
 }

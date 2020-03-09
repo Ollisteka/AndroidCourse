@@ -107,6 +107,7 @@
                   android:hint="@string/numberHint"
                   style="@style/TextViewStyle"/>
         <TextView
+                android:id="@+id/habitRepetitionLabel"
                 android:text="@string/timesEvery"
                 android:textColor="@color/primary_text"
                 android:labelFor="@id/habitRepetitions"
@@ -118,11 +119,11 @@
                   android:importantForAutofill="no"
                   android:hint="@string/numberHint"
                   style="@style/TextViewStyle"/>
-        <TextView
-                android:text="@string/days"
-                android:textColor="@color/primary_text"
-                android:labelFor="@id/habitPeriodicity"
-                style="@style/TextViewStyle"
+        <TextView android:id="@+id/habitPeriodicityLabel"
+                  android:text="@string/days"
+                  android:textColor="@color/primary_text"
+                  android:labelFor="@id/habitPeriodicity"
+                  style="@style/TextViewStyle"
         />
 
     </LinearLayout>

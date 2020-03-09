@@ -16,7 +16,7 @@
     <string name="periodicity">Периодичность</string>
     <string name="days">дней</string>
     <string name="numberHint">10</string>
-    <string name="timesEvery">раз(а), каждые</string>
+    <string name="timesEvery">%s, каждые</string>
     <string name="every">каждые</string>
     <string name="habitColor">Цвет привычки</string>
 
