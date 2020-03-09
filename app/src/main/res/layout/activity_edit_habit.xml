@@ -93,6 +93,41 @@
                      android:text="@string/radio_beauty"/>
     </RadioGroup>
 
+    <TextView
+            android:text="@string/periodicity"
+            android:layout_marginTop="8dp"
+            style="@style/TextViewStyle"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <EditText android:id="@+id/habitRepetitions"
+                  android:inputType="number"
+                  android:importantForAutofill="no"
+                  android:hint="@string/numberHint"
+                  style="@style/TextViewStyle"/>
+        <TextView
+                android:text="@string/timesEvery"
+                android:textColor="@color/primary_text"
+                android:labelFor="@id/habitRepetitions"
+                style="@style/TextViewStyle"
+        />
+
+        <EditText android:id="@+id/habitPeriodicity"
+                  android:inputType="number"
+                  android:importantForAutofill="no"
+                  android:hint="@string/numberHint"
+                  style="@style/TextViewStyle"/>
+        <TextView
+                android:text="@string/days"
+                android:textColor="@color/primary_text"
+                android:labelFor="@id/habitPeriodicity"
+                style="@style/TextViewStyle"
+        />
+
+    </LinearLayout>
+
+
     <Button android:id="@+id/saveHabitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

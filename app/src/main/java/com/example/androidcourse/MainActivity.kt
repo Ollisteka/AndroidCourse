@@ -17,16 +17,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private var habits: MutableList<Habit> = mutableListOf(
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #2", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #3", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #1231", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
-        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white")
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -20,6 +20,8 @@ class EditHabitActivity : AppCompatActivity() {
 
     private lateinit var habitNameEdit: EditText
     private lateinit var habitDescriptionEdit: EditText
+    private lateinit var habitRepetitions: EditText
+    private lateinit var habitPeriodicity: EditText
     private lateinit var habitPrioritySpinner: Spinner
     private lateinit var habitTypeRadio: RadioGroup
     private var habitId: UUID? = null
@@ -59,6 +61,8 @@ class EditHabitActivity : AppCompatActivity() {
 
         habitPrioritySpinner = findViewById(R.id.habitPriority)
         habitTypeRadio = findViewById(R.id.habitTypeRadio)
+        habitRepetitions = findViewById(R.id.habitRepetitions)
+        habitPeriodicity = findViewById(R.id.habitPeriodicity)
 
         fillForEdit()
     }
@@ -85,12 +89,14 @@ class EditHabitActivity : AppCompatActivity() {
                 HabitType.Study -> R.id.radio_study
             }
         )
+        habitRepetitions.setText(habitToEdit.repetitions.toString())
+        habitPeriodicity.setText(habitToEdit.periodicity.toString())
         habitPosition = intent.getIntExtra(EXTRA_HABIT_POSITION, -1)
     }
 
     private fun getHabit(): Habit {
         val name = habitNameEdit.text.toString()
-        val description = habitDescriptionEdit.text.toString()
+        val description = getValueOrDefault(habitDescriptionEdit, R.string.habitDescription)
         val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
         val type =
             when (habitTypeRadio.checkedRadioButtonId) {
@@ -100,7 +106,14 @@ class EditHabitActivity : AppCompatActivity() {
                 else -> throw Exception("You forgot to create new HabitType or handle it here")
             }
 
+        val repetitions = getValueOrDefault(habitRepetitions, R.string.numberHint).toInt()
+        val periodicity = getValueOrDefault(habitPeriodicity, R.string.numberHint).toInt()
+
         val id = habitId ?: UUID.randomUUID()
-        return Habit(name, description, priority, type, id = id)
+        return Habit(name, description, priority, type, repetitions, periodicity, id = id)
+    }
+
+    private fun getValueOrDefault(view: EditText, defaultResourceId: Int): String {
+        return view.text.toString().let { if (TextUtils.isEmpty(it)) getString(defaultResourceId) else it }
     }
 }

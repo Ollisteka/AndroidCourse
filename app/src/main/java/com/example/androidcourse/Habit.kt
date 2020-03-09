@@ -38,7 +38,8 @@ class Habit(
     val description: String,
     val priority: Priority = Priority.Low,
     val habitType: HabitType = HabitType.Health,
-    val periodicity: Long = 100,
+    val repetitions: Int = 10,
+    val periodicity: Int = 2,
     val color: String = "red",
     val id: UUID = UUID.randomUUID()
 ) : Parcelable
