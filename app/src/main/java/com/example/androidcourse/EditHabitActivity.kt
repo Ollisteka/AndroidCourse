@@ -60,7 +60,13 @@ class EditHabitActivity : AppCompatActivity() {
         val name = habitName.text.toString()
         val description = habitDescription.text.toString()
         val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
-        val type = HabitType.getByValue(habitTypeRadio.checkedRadioButtonId);
+        val type =
+            when (habitTypeRadio.checkedRadioButtonId) {
+                R.id.radio_beauty -> HabitType.Beauty
+                R.id.radio_health -> HabitType.Health
+                R.id.radio_study -> HabitType.Study
+                else -> throw Exception("You forgot to create new HabitType or handle it here")
+            }
 
         return Habit(name, description, priority, type)
     }
