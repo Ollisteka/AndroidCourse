@@ -4,19 +4,35 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingLeft="32dp"
+              android:paddingLeft="24dp"
               android:paddingRight="32dp"
               android:orientation="horizontal"
               android:gravity="start"
               style="@style/Widget.AppCompat.Button.Borderless">
 
-    <View android:id="@+id/color"
+    <View android:id="@+id/priorityHigh"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:background="@color/primary_dark"
+          android:layout_marginRight="4dp"
+          android:layout_marginEnd="4dp"
+          android:layout_weight=".015"/>
+
+    <View android:id="@+id/priorityMiddle"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:background="@color/primary_dark"
+          android:layout_marginRight="4dp"
+          android:layout_marginEnd="4dp"
+          android:layout_weight=".015"/>
+
+    <View android:id="@+id/priorityLow"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:background="@color/primary_dark"
           android:layout_marginRight="8dp"
           android:layout_marginEnd="8dp"
-          android:layout_weight=".025"/>
+          android:layout_weight=".015"/>
 
     <LinearLayout
             android:layout_width="0dp"

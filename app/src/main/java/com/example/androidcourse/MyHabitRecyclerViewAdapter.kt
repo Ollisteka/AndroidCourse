@@ -40,7 +40,11 @@ class MyHabitRecyclerViewAdapter(
     inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener {
         private val nameView: TextView = itemView.name
         private val descriptionView: TextView = itemView.description
-        private val colorView: View = itemView.color
+        private val lowPriorityView: View = itemView.priorityLow
+        private val middlePriorityView: View = itemView.priorityMiddle
+        private val highPriorityView: View = itemView.priorityHigh
+
+        private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
 
         override fun onClick(view: View?, position: Int) {
 
@@ -53,7 +57,9 @@ class MyHabitRecyclerViewAdapter(
         fun bind(habit: Habit) {
             nameView.text = habit.name
             descriptionView.text = habit.description
-            colorView.setBackgroundColor(Color.parseColor(habit.color))
+            colors.map { it.setBackgroundColor(Color.parseColor(habit.color)) }
+            middlePriorityView.visibility = if (habit.priority < Priority.Middle) View.INVISIBLE else View.VISIBLE
+            highPriorityView.visibility = if (habit.priority < Priority.High) View.INVISIBLE else View.VISIBLE
         }
     }
 }
