@@ -83,7 +83,7 @@ class EditHabitActivity : AppCompatActivity() {
         habitDescriptionEdit.setText(habitToEdit.description)
         habitPrioritySpinner.setSelection(habitToEdit.priority.value)
         habitTypeRadio.check(
-            when (habitToEdit.habitType) {
+            when (habitToEdit.type) {
                 HabitType.Beauty -> R.id.radio_beauty
                 HabitType.Health -> R.id.radio_health
                 HabitType.Study -> R.id.radio_study

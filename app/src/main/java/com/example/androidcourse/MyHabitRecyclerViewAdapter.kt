@@ -44,6 +44,7 @@ class MyHabitRecyclerViewAdapter(
         private val middlePriorityView: View = itemView.priorityMiddle
         private val highPriorityView: View = itemView.priorityHigh
         private val periodicityView: TextView = itemView.periodicity
+        private val typeView: TextView = itemView.type
         private val context = itemView.context
 
         private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
@@ -72,6 +73,7 @@ class MyHabitRecyclerViewAdapter(
             val every = context.resources.getString(R.string.every)
             val periodicity = "${habit.repetitions} $correctedTimes, $every ${habit.periodicity} $correctedDays"
             periodicityView.text = periodicity
+            typeView.text = habit.type.toLocalString(context)
         }
     }
 }

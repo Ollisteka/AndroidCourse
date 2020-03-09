@@ -41,10 +41,22 @@
             android:layout_weight=".9">
 
 
-        <TextView android:id="@+id/periodicity"
-                  android:textSize="@dimen/overlineText"
-                  style="@style/TextViewStyle"
-                  tools:text="10 раз каждые 2 дня"/>
+        <RelativeLayout android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+            <TextView android:id="@+id/periodicity"
+                      android:textSize="@dimen/overlineText"
+                      style="@style/TextViewStyle"
+                      tools:text="10 раз каждые 2 дня"/>
+
+            <TextView android:id="@+id/type"
+                      android:textSize="12sp"
+                      android:layout_width="match_parent"
+                      android:layout_gravity="end"
+                      android:textAlignment="textEnd"
+                      style="@style/TextViewStyle"
+                      tools:text="Здоровье"/>
+        </RelativeLayout>
 
         <TextView
                 android:id="@+id/name"
