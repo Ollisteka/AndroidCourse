@@ -64,8 +64,13 @@ class EditHabitActivity : AppCompatActivity() {
 
     private fun fillForEdit() {
         if (!intent.hasExtra(EXTRA_NEW_HABIT)) {
+            actionBar?.title = getString(R.string.newHabitActivity_barTitle)
+            supportActionBar?.title = getString(R.string.newHabitActivity_barTitle)
             return
         }
+
+        actionBar?.title = getString(R.string.editHabitActivity_barTitle)
+        supportActionBar?.title = getString(R.string.editHabitActivity_barTitle)
 
         val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA_NEW_HABIT) ?: return
         habitId = habitToEdit.id

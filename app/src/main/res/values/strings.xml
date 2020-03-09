@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Трекер привычек</string>
+    <string name="newHabitActivity_barTitle">Новая привычка</string>
+    <string name="editHabitActivity_barTitle">Редактирование</string>
     <string name="addHabit">Добавить привычку</string>
     <string name="habitName">Название привычки</string>
     <string name="habitNameHint">Ложиться в 10 вечера</string>
