@@ -43,6 +43,8 @@ class MyHabitRecyclerViewAdapter(
         private val lowPriorityView: View = itemView.priorityLow
         private val middlePriorityView: View = itemView.priorityMiddle
         private val highPriorityView: View = itemView.priorityHigh
+        private val periodicityView: TextView = itemView.periodicity
+        private val context = itemView.context
 
         private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
 
@@ -60,6 +62,16 @@ class MyHabitRecyclerViewAdapter(
             colors.map { it.setBackgroundColor(Color.parseColor(habit.color)) }
             middlePriorityView.visibility = if (habit.priority < Priority.Middle) View.INVISIBLE else View.VISIBLE
             highPriorityView.visibility = if (habit.priority < Priority.High) View.INVISIBLE else View.VISIBLE
+
+            val pluralDays = context.resources.getStringArray(R.array.days_plurals)
+            val correctedDays = TextHelpers.getPluralWord(habit.periodicity, pluralDays)
+
+            val pluralTimes = context.resources.getStringArray(R.array.times_plurals)
+            val correctedTimes = TextHelpers.getPluralWord(habit.repetitions, pluralTimes)
+
+            val every = context.resources.getString(R.string.every)
+            val periodicity = "${habit.repetitions} $correctedTimes, $every ${habit.periodicity} $correctedDays"
+            periodicityView.text = periodicity
         }
     }
 }

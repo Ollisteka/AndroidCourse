@@ -40,6 +40,12 @@
             android:orientation="vertical"
             android:layout_weight=".9">
 
+
+        <TextView android:id="@+id/periodicity"
+                  android:textSize="@dimen/overlineText"
+                  style="@style/TextViewStyle"
+                  tools:text="10 раз каждые 2 дня"/>
+
         <TextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"

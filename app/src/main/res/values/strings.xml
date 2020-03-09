@@ -16,12 +16,27 @@
     <string name="periodicity">Периодичность</string>
     <string name="days">дней</string>
     <string name="numberHint">10</string>
-    <string name="timesEvery">раз, каждые</string>
+    <string name="timesEvery">раз(а), каждые</string>
+    <string name="every">каждые</string>
     <string name="habitColor">Цвет привычки</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
         <item>Средний</item>
         <item>Высокий</item>
+    </string-array>
+
+    <string-array name="days_plurals">
+        <item name="0">дней</item>
+        <item name="1">день</item>
+        <item name="2">дня</item>
+        <item name="5">дней</item>
+    </string-array>
+
+    <string-array name="times_plurals">
+        <item name="0">раз</item>
+        <item name="1">раз</item>
+        <item name="2">раза</item>
+        <item name="5">раз</item>
     </string-array>
 </resources>
