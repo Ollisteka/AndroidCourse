@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp"
+        android:padding="16dp"
         android:orientation="vertical"
         tools:context=".EditHabitActivity">
 
@@ -25,31 +25,23 @@
                 style="@style/TextViewStyle"/>
     </LinearLayout>
 
-
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal">
-        <EditText
-                android:id="@+id/habitName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:textSize="@dimen/text_size"
-                android:hint="@string/habitNameHint"
-                android:importantForAutofill="no"
-                android:inputType="textCapSentences"/>
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.25"/>
-    </LinearLayout>
+    <EditText
+            android:id="@+id/habitName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size"
+            android:hint="@string/habitNameHint"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"/>
 
     <TextView
             android:text="@string/habitDescription"
+            android:layout_marginTop="8dp"
             style="@style/TextViewStyle"/>
+
     <EditText
             android:id="@+id/habitDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size"
             android:hint="@string/habitDescription"
@@ -58,23 +50,26 @@
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:layout_marginTop="8dp"
                   android:orientation="horizontal">
         <TextView
                 android:text="@string/habitPriority"
+                android:layout_width="0dp"
+                android:layout_weight=".6"
                 style="@style/TextViewStyle"/>
         <Spinner
                 android:id="@+id/habitPriority"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight=".3"
                 android:entries="@array/priority_array">
         </Spinner>
-
     </LinearLayout>
 
     <Button android:id="@+id/saveHabitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/save_button"
             android:textColor="@color/icons"
             android:enabled="false"
