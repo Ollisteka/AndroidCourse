@@ -53,7 +53,8 @@ class EditHabitActivity : AppCompatActivity() {
 
         habitNameEdit.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus)
-                habitNameEdit.error = if (TextUtils.isEmpty((view as EditText).text)) "Поле обязательно" else null
+                habitNameEdit.error =
+                    if (TextUtils.isEmpty((view as EditText).text)) getString(R.string.required_field_error) else null
         }
 
         habitPrioritySpinner = findViewById(R.id.habitPriority)

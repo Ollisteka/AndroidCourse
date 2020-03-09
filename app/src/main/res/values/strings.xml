@@ -12,6 +12,7 @@
     <string name="radio_study">Учёба</string>
     <string name="radio_health">Здоровье</string>
     <string name="radio_beauty">Красота</string>
+    <string name="required_field_error">Поле обязательно</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
