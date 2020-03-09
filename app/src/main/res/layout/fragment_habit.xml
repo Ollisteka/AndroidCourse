@@ -4,18 +4,17 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginLeft="@dimen/text_margin"
-              android:layout_marginRight="@dimen/text_margin"
-              android:layout_marginTop="@dimen/text_margin"
-              android:orientation="vertical">
+              android:paddingLeft="32dp"
+              android:paddingRight="32dp"
+              android:orientation="vertical"
+              android:gravity="start"
+              style="@style/Widget.AppCompat.Button.Borderless">
     <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size"
             android:textColor="@color/primary_text"
-            android:ellipsize="end"
-            android:singleLine="true"
+            style="@style/Text.SingleLine"
             tools:text="Название привычки"
     />
 
@@ -25,8 +24,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/secondary_text"
-            android:ellipsize="end"
-            android:singleLine="true"
+            style="@style/Text.SingleLine"
             tools:text="Описание привычки"
             android:textAppearance="?attr/textAppearanceListItem"/>
 </LinearLayout>
