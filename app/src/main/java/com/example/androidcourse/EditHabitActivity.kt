@@ -11,33 +11,37 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 
 const val EXTRA_NEW_HABIT = "com.example.androidcourse.NEW_HABIT"
 
 class EditHabitActivity : AppCompatActivity() {
 
-    private lateinit var habitName: EditText
-    private lateinit var habitDescription: EditText
+    private lateinit var habitNameEdit: EditText
+    private lateinit var habitDescriptionEdit: EditText
     private lateinit var habitPrioritySpinner: Spinner
     private lateinit var habitTypeRadio: RadioGroup
+    private var habitId: UUID? = null
+    private var habitPosition: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_habit)
 
-        habitName = findViewById(R.id.habitName)
-        habitDescription = findViewById(R.id.habitDescription)
+        habitNameEdit = findViewById(R.id.habitName)
+        habitDescriptionEdit = findViewById(R.id.habitDescription)
 
         val saveButton = findViewById<Button>(R.id.saveHabitButton).apply {
             setOnClickListener {
                 val sendIntent = Intent(applicationContext, MainActivity::class.java)
                 sendIntent.putExtra(EXTRA_NEW_HABIT, getHabit())
+                habitPosition?.let { sendIntent.putExtra(EXTRA_HABIT_POSITION, it) }
                 startActivity(sendIntent)
             }
         }
 
-        habitName.addTextChangedListener(object : TextWatcher {
+        habitNameEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 saveButton.isEnabled = !TextUtils.isEmpty(s)
             }
@@ -47,18 +51,40 @@ class EditHabitActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        habitName.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
+        habitNameEdit.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus)
-                habitName.error = if (TextUtils.isEmpty((view as EditText).text)) "Поле обязательно" else null
+                habitNameEdit.error = if (TextUtils.isEmpty((view as EditText).text)) "Поле обязательно" else null
         }
 
         habitPrioritySpinner = findViewById(R.id.habitPriority)
         habitTypeRadio = findViewById(R.id.habitTypeRadio)
+
+        fillForEdit()
+    }
+
+    private fun fillForEdit() {
+        if (!intent.hasExtra(EXTRA_NEW_HABIT)) {
+            return
+        }
+
+        val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA_NEW_HABIT) ?: return
+        habitId = habitToEdit.id
+        habitNameEdit.setText(habitToEdit.name)
+        habitDescriptionEdit.setText(habitToEdit.description)
+        habitPrioritySpinner.setSelection(habitToEdit.priority.value)
+        habitTypeRadio.check(
+            when (habitToEdit.habitType) {
+                HabitType.Beauty -> R.id.radio_beauty
+                HabitType.Health -> R.id.radio_health
+                HabitType.Study -> R.id.radio_study
+            }
+        )
+        habitPosition = intent.getIntExtra(EXTRA_HABIT_POSITION, -1)
     }
 
     private fun getHabit(): Habit {
-        val name = habitName.text.toString()
-        val description = habitDescription.text.toString()
+        val name = habitNameEdit.text.toString()
+        val description = habitDescriptionEdit.text.toString()
         val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
         val type =
             when (habitTypeRadio.checkedRadioButtonId) {
@@ -68,6 +94,7 @@ class EditHabitActivity : AppCompatActivity() {
                 else -> throw Exception("You forgot to create new HabitType or handle it here")
             }
 
-        return Habit(name, description, priority, type)
+        val id = habitId ?: UUID.randomUUID()
+        return Habit(name, description, priority, type, id = id)
     }
 }

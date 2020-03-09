@@ -17,7 +17,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private var habits: MutableList<Habit> = mutableListOf(
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white")
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #2", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #3", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #1231", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white"),
+        Habit("Привычка #4", "Описание", Priority.Low, HabitType.Health, 10, "white")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,11 +74,21 @@ class MainActivity : AppCompatActivity() {
         setIntent(intent)
         //now getIntent() should always return the last received intent
 
-        val newHabit: Habit? = intent?.getParcelableExtra(EXTRA_NEW_HABIT)
-        if (newHabit != null) {
-            habits.add(newHabit)
-            viewAdapter.notifyItemInserted(habits.size - 1)
-        }
+        val newHabit: Habit = intent?.getParcelableExtra(EXTRA_NEW_HABIT) ?: return
+        val position = intent.getIntExtra(EXTRA_HABIT_POSITION, -1)
+        if (habits.any { it.id == newHabit.id } && position >= 0 && position < habits.size)
+            updateHabit(newHabit, position)
+        else addNewHabit(newHabit)
+    }
+
+    private fun addNewHabit(habit: Habit) {
+        habits.add(habit)
+        viewAdapter.notifyItemInserted(habits.size - 1)
+    }
+
+    private fun updateHabit(habit: Habit, position: Int) {
+        habits[position] = habit
+        viewAdapter.notifyItemChanged(position)
     }
 
     override fun onStart() {
