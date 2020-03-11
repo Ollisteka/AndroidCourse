@@ -84,20 +84,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:checkedButton="@id/radio_study"
+                android:checkedButton="@id/radio_good"
                 android:orientation="vertical">
-            <RadioButton android:id="@+id/radio_study"
+            <RadioButton android:id="@+id/radio_good"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:text="@string/study"/>
-            <RadioButton android:id="@+id/radio_health"
+                         android:text="@string/good"/>
+            <RadioButton android:id="@+id/radio_bad"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
-                         android:text="@string/health"/>
-            <RadioButton android:id="@+id/radio_beauty"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="@string/beauty"/>
+                         android:text="@string/bad"/>
         </RadioGroup>
 
         <TextView

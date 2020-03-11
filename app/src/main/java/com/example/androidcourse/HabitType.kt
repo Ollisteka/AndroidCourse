@@ -3,9 +3,8 @@ package com.example.androidcourse
 import android.content.Context
 
 enum class HabitType(val value: Int) {
-    Study(0),
-    Health(1),
-    Beauty(2);
+    Good(0),
+    Bad(1);
 
     fun toLocalString(context: Context): String {
         return context.getString(getStringId())
@@ -13,9 +12,8 @@ enum class HabitType(val value: Int) {
 
     private fun getStringId(): Int {
         return when (this) {
-            Beauty -> R.string.beauty
-            Health -> R.string.health
-            Study -> R.string.study
+            Bad -> R.string.bad
+            Good -> R.string.good
         }
     }
 }

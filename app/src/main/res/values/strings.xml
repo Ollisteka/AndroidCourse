@@ -9,9 +9,8 @@
     <string name="save">Сохранить</string>
     <string name="habitPriority">Приоритет</string>
     <string name="habitType">Тип</string>
-    <string name="study">Учёба</string>
-    <string name="health">Здоровье</string>
-    <string name="beauty">Красота</string>
+    <string name="good">Хорошая</string>
+    <string name="bad">Плохая</string>
     <string name="required_field_error">Поле обязательно</string>
     <string name="periodicity">Периодичность</string>
     <string name="days">дней</string>

@@ -84,9 +84,8 @@ class EditHabitActivity : AppCompatActivity() {
         habitPriority.setSelection(habitToEdit.priority.value)
         habitTypeRadio.check(
             when (habitToEdit.type) {
-                HabitType.Beauty -> R.id.radio_beauty
-                HabitType.Health -> R.id.radio_health
-                HabitType.Study -> R.id.radio_study
+                HabitType.Bad -> R.id.radio_bad
+                HabitType.Good -> R.id.radio_good
             }
         )
         habitRepetitions.setText(habitToEdit.repetitions.toString())
@@ -100,9 +99,8 @@ class EditHabitActivity : AppCompatActivity() {
         val priority = Priority.getByValue(habitPriority.selectedItemPosition)
         val type =
             when (habitTypeRadio.checkedRadioButtonId) {
-                R.id.radio_beauty -> HabitType.Beauty
-                R.id.radio_health -> HabitType.Health
-                R.id.radio_study -> HabitType.Study
+                R.id.radio_bad -> HabitType.Bad
+                R.id.radio_good -> HabitType.Good
                 else -> throw Exception("You forgot to create new HabitType or handle it here")
             }
 
