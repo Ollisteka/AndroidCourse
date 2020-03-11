@@ -52,6 +52,7 @@
                 android:textSize="@dimen/text_size"
                 android:hint="@string/habitDescription"
                 android:importantForAutofill="no"
+                android:nextFocusDown="@id/habitRepetitions"
                 android:inputType="textMultiLine"/>
 
         <LinearLayout android:layout_width="match_parent"
@@ -110,6 +111,7 @@
             <EditText android:id="@+id/habitRepetitions"
                       android:inputType="number"
                       android:importantForAutofill="no"
+                      android:nextFocusDown="@id/habitPeriodicity"
                       android:hint="@string/numberHint"
                       style="@style/TextViewStyle"/>
             <TextView
@@ -121,6 +123,7 @@
             />
 
             <EditText android:id="@+id/habitPeriodicity"
+                      android:focusable="true"
                       android:inputType="number"
                       android:importantForAutofill="no"
                       android:hint="@string/numberHint"
