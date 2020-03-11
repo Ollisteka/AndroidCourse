@@ -62,16 +62,11 @@ class EditHabitActivity : AppCompatActivity() {
         habitTypeRadio = findViewById(R.id.habitTypeRadio)
         habitRepetitions = findViewById(R.id.habitRepetitions)
         habitRepetitionsLabel = findViewById(R.id.habitRepetitionLabel)
-        habitRepetitions.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus)
-                setRepetitionLabel()
-        }
+        habitRepetitions.addTextChangedListener(AfterTextChangedWatcher { setRepetitionLabel() })
+
         habitPeriodicity = findViewById(R.id.habitPeriodicity)
         habitPeriodicityLabel = findViewById(R.id.habitPeriodicityLabel)
-        habitPeriodicity.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus)
-                setPeriodicityLabel()
-        }
+        habitPeriodicity.addTextChangedListener(AfterTextChangedWatcher { setPeriodicityLabel() })
 
         fillForEdit()
         setRepetitionLabel()
