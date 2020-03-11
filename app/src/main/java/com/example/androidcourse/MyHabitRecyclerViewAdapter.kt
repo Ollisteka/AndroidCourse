@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit.view.*
+import java.util.*
 
 const val EXTRA_HABIT_POSITION = "HabitPosition"
 
@@ -46,6 +47,7 @@ class MyHabitRecyclerViewAdapter(
         private val periodicityView: TextView = itemView.periodicity
         private val typeView: TextView = itemView.type
         private val context = itemView.context
+        private var habitId: UUID? = null
 
         private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
 
@@ -54,10 +56,11 @@ class MyHabitRecyclerViewAdapter(
         }
 
         override fun toString(): String {
-            return super.toString() + " '" + descriptionView.text + "'"
+            return super.toString() + "${nameView.text} (id: ${habitId})"
         }
 
         fun bind(habit: Habit) {
+            habitId = habit.id
             nameView.text = habit.name
             descriptionView.text = habit.description
             colors.map { it.setBackgroundColor(Color.parseColor(habit.color)) }
