@@ -3,10 +3,10 @@ package com.example.androidcourse
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
 
 const val LOG_TAG = "MainActivity"
 const val HABITS = "HABITS"
@@ -16,14 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private var habits: MutableList<Habit> = mutableListOf(
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health),
-        Habit("Привычка #1", "Описание", Priority.Low, HabitType.Health)
-    )
+    private var habits: MutableList<Habit> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(LOG_TAG, "Activity created")
@@ -33,16 +26,14 @@ class MainActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = MyHabitRecyclerViewAdapter(habits)
 
-        recyclerView = findViewById<RecyclerView>(R.id.habitsRecyclerView).apply {
+        recyclerView = habitsRecyclerView.apply {
             // use a linear layout manager
             layoutManager = viewManager
 
             // specify an viewAdapter (see also next example)
             adapter = viewAdapter
-
         }
 
-        val addHabitButton: View = findViewById(R.id.addHabitButton)
         addHabitButton.setOnClickListener {
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
             startActivity(sendIntent)

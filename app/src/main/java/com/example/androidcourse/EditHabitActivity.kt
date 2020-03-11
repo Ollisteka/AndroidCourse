@@ -6,23 +6,15 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View.OnFocusChangeListener
-import android.widget.*
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_edit_habit.*
 import java.util.*
 
 
 const val EXTRA_NEW_HABIT = "com.example.androidcourse.NEW_HABIT"
 
 class EditHabitActivity : AppCompatActivity() {
-
-    private lateinit var habitNameEdit: EditText
-    private lateinit var habitDescriptionEdit: EditText
-    private lateinit var habitRepetitions: EditText
-    private lateinit var habitRepetitionsLabel: TextView
-    private lateinit var habitPeriodicity: EditText
-    private lateinit var habitPeriodicityLabel: TextView
-    private lateinit var habitPrioritySpinner: Spinner
-    private lateinit var habitTypeRadio: RadioGroup
     private var habitId: UUID? = null
     private var habitPosition: Int? = null
 
@@ -30,10 +22,7 @@ class EditHabitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_habit)
 
-        habitNameEdit = findViewById(R.id.habitName)
-        habitDescriptionEdit = findViewById(R.id.habitDescription)
-
-        val saveButton = findViewById<Button>(R.id.saveHabitButton).apply {
+        saveHabitButton.apply {
             setOnClickListener {
                 val sendIntent = Intent(applicationContext, MainActivity::class.java)
                 sendIntent.putExtra(EXTRA_NEW_HABIT, getHabit())
@@ -42,9 +31,9 @@ class EditHabitActivity : AppCompatActivity() {
             }
         }
 
-        habitNameEdit.addTextChangedListener(object : TextWatcher {
+        habitName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                saveButton.isEnabled = !TextUtils.isEmpty(s)
+                saveHabitButton.isEnabled = !TextUtils.isEmpty(s)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -52,20 +41,13 @@ class EditHabitActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        habitNameEdit.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
+        habitName.onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus)
-                habitNameEdit.error =
+                habitName.error =
                     if (TextUtils.isEmpty((view as EditText).text)) getString(R.string.required_field_error) else null
         }
 
-        habitPrioritySpinner = findViewById(R.id.habitPriority)
-        habitTypeRadio = findViewById(R.id.habitTypeRadio)
-        habitRepetitions = findViewById(R.id.habitRepetitions)
-        habitRepetitionsLabel = findViewById(R.id.habitRepetitionLabel)
         habitRepetitions.addTextChangedListener(AfterTextChangedWatcher { setRepetitionLabel() })
-
-        habitPeriodicity = findViewById(R.id.habitPeriodicity)
-        habitPeriodicityLabel = findViewById(R.id.habitPeriodicityLabel)
         habitPeriodicity.addTextChangedListener(AfterTextChangedWatcher { setPeriodicityLabel() })
 
         fillForEdit()
@@ -76,7 +58,7 @@ class EditHabitActivity : AppCompatActivity() {
     private fun setRepetitionLabel() {
         val pluralTimes = resources.getStringArray(R.array.times_plurals)
         val correctedTimes = TextHelpers.getPluralWord(getRepetitions(), pluralTimes)
-        habitRepetitionsLabel.text = getString(R.string.timesEvery, correctedTimes)
+        habitRepetitionLabel.text = getString(R.string.timesEvery, correctedTimes)
     }
 
     private fun setPeriodicityLabel() {
@@ -97,9 +79,9 @@ class EditHabitActivity : AppCompatActivity() {
 
         val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA_NEW_HABIT) ?: return
         habitId = habitToEdit.id
-        habitNameEdit.setText(habitToEdit.name)
-        habitDescriptionEdit.setText(habitToEdit.description)
-        habitPrioritySpinner.setSelection(habitToEdit.priority.value)
+        habitName.setText(habitToEdit.name)
+        habitDescription.setText(habitToEdit.description)
+        habitPriority.setSelection(habitToEdit.priority.value)
         habitTypeRadio.check(
             when (habitToEdit.type) {
                 HabitType.Beauty -> R.id.radio_beauty
@@ -113,9 +95,9 @@ class EditHabitActivity : AppCompatActivity() {
     }
 
     private fun getHabit(): Habit {
-        val name = habitNameEdit.text.toString()
-        val description = getValueOrDefault(habitDescriptionEdit, R.string.habitDescription)
-        val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition)
+        val name = habitName.text.toString()
+        val description = getValueOrDefault(habitDescription, R.string.habitDescription)
+        val priority = Priority.getByValue(habitPriority.selectedItemPosition)
         val type =
             when (habitTypeRadio.checkedRadioButtonId) {
                 R.id.radio_beauty -> HabitType.Beauty
