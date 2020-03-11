@@ -120,7 +120,7 @@ class EditHabitActivity : AppCompatActivity() {
     private fun getHabit(): Habit {
         val name = habitNameEdit.text.toString()
         val description = getValueOrDefault(habitDescriptionEdit, R.string.habitDescription)
-        val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition);
+        val priority = Priority.getByValue(habitPrioritySpinner.selectedItemPosition)
         val type =
             when (habitTypeRadio.checkedRadioButtonId) {
                 R.id.radio_beauty -> HabitType.Beauty
