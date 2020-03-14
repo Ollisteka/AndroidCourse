@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         if (existingHabit != null) {
             updateHabit(newHabit, existingHabit.index)
         } else addNewHabit(newHabit)
-        habitsPagerAdapter.setHabits(habits)
         habitsPagerAdapter.notifyHabitChanged(newHabit)
     }
 
