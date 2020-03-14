@@ -3,21 +3,29 @@ package com.example.androidcourse
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val HABITS = "HABITS"
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var habitsListFragment: HabitListFragment;
+    private lateinit var habitsPagerAdapter: HabitsListPagerAdapter;
 
-    private var habits: MutableList<Habit> = mutableListOf()
+    private var habits: MutableList<Habit> = mutableListOf(
+        Habit("Хорошая", "Описание", type = HabitType.Good),
+        Habit("Плохая", "Описание", type = HabitType.Bad)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        habitsListFragment =
-            supportFragmentManager.findFragmentById(R.id.habitsList) as HabitListFragment;
-        habitsListFragment.setHabits(habits)
+        habitsPagerAdapter = HabitsListPagerAdapter(this, habits)
+        pager.adapter = habitsPagerAdapter
+
+        TabLayoutMediator(tab_layout, pager) { tab, position ->
+            tab.text = if (position == 0) "Хорошие" else "Плохие"
+        }.attach()
+
         addHabitButton.setOnClickListener {
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
             startActivity(sendIntent)
@@ -43,6 +51,23 @@ class MainActivity : AppCompatActivity() {
 
         val newHabit: Habit = intent?.getParcelableExtra(EXTRA.NEW_HABIT) ?: return
         val position = intent.getIntExtra(EXTRA.HABIT_POSITION, -1)
-        habitsListFragment.addOrUpdate(newHabit, position)
+
+        addOrUpdate(newHabit, position)
+    }
+
+    private fun addOrUpdate(newHabit: Habit, position: Int) {
+        if (habits.any { it.id == newHabit.id } && position >= 0 && position < habits.size)
+            updateHabit(newHabit, position)
+        else addNewHabit(newHabit)
+        habitsPagerAdapter.setHabits(habits)
+        habitsPagerAdapter.notifyHabitChanged(newHabit)
+    }
+
+    private fun updateHabit(habit: Habit, position: Int) {
+        habits[position] = habit
+    }
+
+    private fun addNewHabit(habit: Habit) {
+        habits.add(habit)
     }
 }

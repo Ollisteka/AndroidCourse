@@ -10,11 +10,22 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 
 private const val SAVED_HABITS = "SAVED_HABITS"
+private const val ARGS_HABITS = "ARGS_HABITS"
 
 class HabitListFragment : Fragment() {
     private var habits: MutableList<Habit> = mutableListOf()
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+
+    companion object {
+        fun newInstance(habits: List<Habit>): HabitListFragment {
+            val fragment = HabitListFragment()
+            val bundle = Bundle()
+            bundle.putParcelableArray(ARGS_HABITS, habits.toTypedArray())
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +45,9 @@ class HabitListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habits.clear()
-        savedInstanceState?.getParcelableArray(SAVED_HABITS)?.map { habits.add(it as Habit) }
+
+        val habitsToLoad = arguments?.getParcelableArray(ARGS_HABITS) ?: savedInstanceState?.getParcelableArray(SAVED_HABITS)
+        habitsToLoad?.map { habits.add(it as Habit) }
 
         viewManager = LinearLayoutManager(context)
         viewAdapter =
@@ -59,10 +72,11 @@ class HabitListFragment : Fragment() {
         viewAdapter.notifyDataSetChanged()
     }
 
-    fun addOrUpdate(newHabit: Habit, position: Int) {
-        if (habits.any { it.id == newHabit.id } && position >= 0 && position < habits.size)
-            updateHabit(newHabit, position)
-        else addNewHabit(newHabit)
+    fun addOrUpdate(newHabit: Habit) {
+        val existingHabit = habits.withIndex().find { it.value.id == newHabit.id }
+        if (existingHabit != null) {
+            updateHabit(newHabit, existingHabit.index)
+        } else addNewHabit(newHabit)
     }
 
     private fun updateHabit(habit: Habit, position: Int) {
