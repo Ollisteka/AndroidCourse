@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-const val HABITS = "HABITS"
+private const val HABITS = "HABITS"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var habitsListFragment: HabitListFragment;
@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
 
-        val newHabit: Habit = intent?.getParcelableExtra(EXTRA_NEW_HABIT) ?: return
-        val position = intent.getIntExtra(EXTRA_HABIT_POSITION, -1)
+        val newHabit: Habit = intent?.getParcelableExtra(EXTRA.NEW_HABIT) ?: return
+        val position = intent.getIntExtra(EXTRA.HABIT_POSITION, -1)
         habitsListFragment.addOrUpdate(newHabit, position)
     }
 }

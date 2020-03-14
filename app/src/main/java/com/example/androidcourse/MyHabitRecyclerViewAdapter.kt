@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit.view.*
 import java.util.*
 
-const val EXTRA_HABIT_POSITION = "HabitPosition"
-
 /**
  * [RecyclerView.Adapter] that can display a [Habit]
  */
@@ -26,8 +24,8 @@ class MyHabitRecyclerViewAdapter(
         return HabitViewHolder(view).listen { position, _ ->
             val habit = habits[position];
             val sendIntent = Intent(view.context, EditHabitActivity::class.java)
-            sendIntent.putExtra(EXTRA_NEW_HABIT, habit)
-            sendIntent.putExtra(EXTRA_HABIT_POSITION, position)
+            sendIntent.putExtra(EXTRA.NEW_HABIT, habit)
+            sendIntent.putExtra(EXTRA.HABIT_POSITION, position)
             view.context.startActivity(sendIntent)
         }
     }
