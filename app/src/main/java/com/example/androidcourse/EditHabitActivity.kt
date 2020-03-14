@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 
 class EditHabitActivity : AppCompatActivity() {
-    private var habitPosition: Int? = null
     private lateinit var editHabitFragment: EditHabitFragment;
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +17,6 @@ class EditHabitActivity : AppCompatActivity() {
             setOnClickListener {
                 val sendIntent = Intent(applicationContext, MainActivity::class.java)
                 sendIntent.putExtra(EXTRA.NEW_HABIT, editHabitFragment.getHabit())
-                habitPosition?.let { sendIntent.putExtra(EXTRA.HABIT_POSITION, it) }
                 startActivity(sendIntent)
             }
         }
@@ -37,8 +35,6 @@ class EditHabitActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.editHabitActivity_barTitle)
 
         val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA.NEW_HABIT) ?: return
-        habitPosition = intent.getIntExtra(EXTRA.HABIT_POSITION, -1)
-
         editHabitFragment.update(habitToEdit)
     }
 }

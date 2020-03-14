@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 private const val HABITS = "HABITS"
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var habitsPagerAdapter: HabitsListPagerAdapter;
+    private lateinit var habitsPagerAdapter: HabitsListPagerAdapter
 
     private var habits: MutableList<Habit> = mutableListOf(
         Habit("Хорошая", "Описание", type = HabitType.Good),
@@ -50,15 +50,14 @@ class MainActivity : AppCompatActivity() {
         setIntent(intent)
 
         val newHabit: Habit = intent?.getParcelableExtra(EXTRA.NEW_HABIT) ?: return
-        val position = intent.getIntExtra(EXTRA.HABIT_POSITION, -1)
-
-        addOrUpdate(newHabit, position)
+        addOrUpdate(newHabit)
     }
 
-    private fun addOrUpdate(newHabit: Habit, position: Int) {
-        if (habits.any { it.id == newHabit.id } && position >= 0 && position < habits.size)
-            updateHabit(newHabit, position)
-        else addNewHabit(newHabit)
+    private fun addOrUpdate(newHabit: Habit) {
+        val existingHabit = habits.withIndex().find { it.value.id == newHabit.id }
+        if (existingHabit != null) {
+            updateHabit(newHabit, existingHabit.index)
+        } else addNewHabit(newHabit)
         habitsPagerAdapter.setHabits(habits)
         habitsPagerAdapter.notifyHabitChanged(newHabit)
     }

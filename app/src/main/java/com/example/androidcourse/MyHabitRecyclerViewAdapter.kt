@@ -25,7 +25,6 @@ class MyHabitRecyclerViewAdapter(
             val habit = habits[position];
             val sendIntent = Intent(view.context, EditHabitActivity::class.java)
             sendIntent.putExtra(EXTRA.NEW_HABIT, habit)
-            sendIntent.putExtra(EXTRA.HABIT_POSITION, position)
             view.context.startActivity(sendIntent)
         }
     }
