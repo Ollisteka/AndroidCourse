@@ -2,7 +2,9 @@ package com.example.androidcourse
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -15,6 +17,8 @@ interface IHabitsProvider {
 
 class MainActivity : AppCompatActivity(), IHabitsProvider {
     private lateinit var habitsPagerAdapter: HabitsListPagerAdapter
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var mToolbar: Toolbar
 
     private var habits: MutableList<Habit> = mutableListOf(
         Habit("Хорошая", "Описание", type = HabitType.Good),
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity(), IHabitsProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mToolbar = toolbar as Toolbar
+        setSupportActionBar(mToolbar)
 
         savedInstanceState?.getParcelableArray(HABITS)?.let { savedHabits ->
             habits = savedHabits.map { it as Habit }.toMutableList()
@@ -42,6 +48,10 @@ class MainActivity : AppCompatActivity(), IHabitsProvider {
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
             startActivity(sendIntent)
         }
+        drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
+        drawerToggle.isDrawerIndicatorEnabled = true
+        navDrawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

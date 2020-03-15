@@ -19,6 +19,8 @@
     <string name="every">каждые</string>
     <string name="habitColor">Цвет привычки</string>
     <string name="aboutScreen_barTitle">О приложении</string>
+    <string name="open_drawer">Открыть меню</string>
+    <string name="close_drawer">Закрыть меню</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
