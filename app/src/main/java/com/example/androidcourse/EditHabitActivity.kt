@@ -3,6 +3,8 @@ package com.example.androidcourse
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 
 class EditHabitActivity : AppCompatActivity() {
@@ -25,13 +27,15 @@ class EditHabitActivity : AppCompatActivity() {
     }
 
     private fun fillForEdit() {
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+
         if (!intent.hasExtra(EXTRA.NEW_HABIT)) {
-            actionBar?.title = getString(R.string.newHabitActivity_barTitle)
             supportActionBar?.title = getString(R.string.newHabitActivity_barTitle)
             return
         }
 
-        actionBar?.title = getString(R.string.editHabitActivity_barTitle)
         supportActionBar?.title = getString(R.string.editHabitActivity_barTitle)
 
         val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA.NEW_HABIT) ?: return
