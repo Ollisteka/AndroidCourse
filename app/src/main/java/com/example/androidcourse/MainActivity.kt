@@ -2,11 +2,15 @@ package com.example.androidcourse
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 private const val HABITS = "HABITS"
 
@@ -15,7 +19,7 @@ interface IHabitsProvider {
     fun addHabitsWatcher(watcher: IHabitsWatcher)
 }
 
-class MainActivity : AppCompatActivity(), IHabitsProvider {
+class MainActivity : AppCompatActivity(), IHabitsProvider, NavigationView.OnNavigationItemSelectedListener {
     private lateinit var habitsPagerAdapter: HabitsListPagerAdapter
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var mToolbar: Toolbar
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity(), IHabitsProvider {
         drawerToggle.isDrawerIndicatorEnabled = true
         navDrawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+        navDrawer.setNavigationItemSelectedListener(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -87,5 +92,14 @@ class MainActivity : AppCompatActivity(), IHabitsProvider {
             habits.add(newHabit)
         }
         habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_about -> startActivity(Intent(applicationContext, AboutActivity::class.java))
+        }
+
+        navDrawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 }
