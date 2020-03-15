@@ -18,6 +18,7 @@
     <string name="timesEvery">%s, каждые</string>
     <string name="every">каждые</string>
     <string name="habitColor">Цвет привычки</string>
+    <string name="aboutScreen_barTitle">О приложении</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
