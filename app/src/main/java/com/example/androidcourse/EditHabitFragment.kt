@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 import java.util.*
@@ -50,8 +51,8 @@ class EditHabitFragment : Fragment() {
                     ) else null
         }
 
-        habitRepetitions.addTextChangedListener(AfterTextChangedWatcher { setRepetitionLabel() })
-        habitPeriodicity.addTextChangedListener(AfterTextChangedWatcher { setPeriodicityLabel() })
+        habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
+        habitPeriodicity.doAfterTextChanged { setPeriodicityLabel() }
 
         setRepetitionLabel()
         setPeriodicityLabel()
