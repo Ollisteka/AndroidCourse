@@ -8,7 +8,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val HABITS = "HABITS"
 
-class MainActivity : AppCompatActivity() {
+interface IHabitsProvider {
+    fun getHabits(habitType: HabitType): List<Habit>
+    fun addHabitsWatcher(watcher: IHabitsWatcher)
+}
+
+class MainActivity : AppCompatActivity(), IHabitsProvider {
     private lateinit var habitsPagerAdapter: HabitsListPagerAdapter
 
     private var habits: MutableList<Habit> = mutableListOf(
@@ -16,10 +21,17 @@ class MainActivity : AppCompatActivity() {
         Habit("Плохая", "Описание", type = HabitType.Bad)
     )
 
+    private val habitsWatchersByType: MutableMap<HabitType, IHabitsWatcher> = mutableMapOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        habitsPagerAdapter = HabitsListPagerAdapter(this, habits)
+
+        savedInstanceState?.getParcelableArray(HABITS)?.let { savedHabits ->
+            habits = savedHabits.map { it as Habit }.toMutableList()
+        }
+
+        habitsPagerAdapter = HabitsListPagerAdapter(this)
         pager.adapter = habitsPagerAdapter
 
         TabLayoutMediator(tab_layout, pager) { tab, position ->
@@ -38,34 +50,32 @@ class MainActivity : AppCompatActivity() {
         outState.putParcelableArray(HABITS, habits.toTypedArray())
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
+    override fun addHabitsWatcher(watcher: IHabitsWatcher) {
+        habitsWatchersByType[watcher.habitType] = watcher
+    }
 
-        habits.clear()
-        savedInstanceState.getParcelableArray(HABITS)?.map { habits.add(it as Habit) }
+    override fun getHabits(habitType: HabitType): List<Habit> {
+        return habits.filter { it.type == habitType }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
 
-        val newHabit: Habit = intent?.getParcelableExtra(EXTRA.NEW_HABIT) ?: return
-        addOrUpdate(newHabit)
+        intent?.getParcelableExtra<Habit?>(EXTRA.NEW_HABIT)?.let { addOrUpdate(it) }
     }
 
     private fun addOrUpdate(newHabit: Habit) {
         val existingHabit = habits.withIndex().find { it.value.id == newHabit.id }
         if (existingHabit != null) {
-            updateHabit(newHabit, existingHabit.index)
-        } else addNewHabit(newHabit)
-        habitsPagerAdapter.notifyHabitChanged(newHabit)
-    }
-
-    private fun updateHabit(habit: Habit, position: Int) {
-        habits[position] = habit
-    }
-
-    private fun addNewHabit(habit: Habit) {
-        habits.add(habit)
+            habits[existingHabit.index] = newHabit
+            val oldType = existingHabit.value.type
+            if (oldType != newHabit.type) {
+                habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.value.id)
+            }
+        } else {
+            habits.add(newHabit)
+        }
+        habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit)
     }
 }

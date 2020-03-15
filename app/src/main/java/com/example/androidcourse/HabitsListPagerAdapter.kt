@@ -4,32 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class HabitsListPagerAdapter(activity: AppCompatActivity, private val habits: List<Habit>) : FragmentStateAdapter(activity) {
-    private var goodHabits: HabitListFragment? = null
-    private var badHabits: HabitListFragment? = null
 
+class HabitsListPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> {
-                goodHabits =
-                    HabitListFragment.newInstance(habits.filter { it.type == HabitType.Good })
-                goodHabits!!
-            }
-            else -> {
-                badHabits =
-                    HabitListFragment.newInstance(habits.filter { it.type == HabitType.Bad })
-                badHabits!!
-            }
+            0 -> HabitListFragment.newInstance(HabitType.Good)
+            else -> HabitListFragment.newInstance(HabitType.Bad)
         }
     }
 
     override fun getItemCount() = 2
-
-    fun notifyHabitChanged(habit: Habit) {
-        if (habit.type == HabitType.Good) {
-            goodHabits?.addOrUpdate(habit)
-        } else {
-            badHabits?.addOrUpdate(habit)
-        }
-    }
 }
