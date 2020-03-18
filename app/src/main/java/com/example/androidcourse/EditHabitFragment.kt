@@ -1,9 +1,7 @@
 package com.example.androidcourse
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,16 +31,7 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        habitName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                saveHabitButton.isEnabled = !TextUtils.isEmpty(s)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
+        habitName.doAfterTextChanged { text -> saveHabitButton.isEnabled = !TextUtils.isEmpty(text) }
         habitName.onFocusChangeListener = View.OnFocusChangeListener { textView, hasFocus ->
             if (!hasFocus)
                 habitName.error =
