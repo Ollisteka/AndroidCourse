@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), IHabitsProvider, NavigationView.OnNavi
         pager.adapter = habitsPagerAdapter
 
         TabLayoutMediator(tab_layout, pager) { tab, position ->
-            tab.text = if (position == 0) "Хорошие" else "Плохие"
+            tab.text = if (position == 0) getString(R.string.tab_name_good) else getString(R.string.tab_name_bad)
         }.attach()
 
         addHabitButton.setOnClickListener {
