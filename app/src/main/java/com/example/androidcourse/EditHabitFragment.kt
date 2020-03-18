@@ -102,14 +102,11 @@ class EditHabitFragment : Fragment() {
     }
 
     private fun setRepetitionLabel() {
-        val pluralTimes = resources.getStringArray(R.array.times_plurals)
-        val correctedTimes = TextHelpers.getPluralWord(getRepetitions(), pluralTimes)
-        habitRepetitionLabel.text = getString(R.string.timesEvery, correctedTimes)
+        val pluralTimes = resources.getQuantityString(R.plurals.times, getRepetitions())
+        habitRepetitionLabel.text = getString(R.string.timesEvery, pluralTimes)
     }
 
     private fun setPeriodicityLabel() {
-        val pluralDays = resources.getStringArray(R.array.days_plurals)
-        val correctedPeriodicity = TextHelpers.getPluralWord(getPeriodicity(), pluralDays)
-        habitPeriodicityLabel.text = correctedPeriodicity
+        habitPeriodicityLabel.text = resources.getQuantityString(R.plurals.days, getPeriodicity())
     }
 }

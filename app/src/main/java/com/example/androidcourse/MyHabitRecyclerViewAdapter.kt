@@ -64,14 +64,10 @@ class MyHabitRecyclerViewAdapter(
             middlePriorityView.visibility = if (habit.priority < Priority.Middle) View.INVISIBLE else View.VISIBLE
             highPriorityView.visibility = if (habit.priority < Priority.High) View.INVISIBLE else View.VISIBLE
 
-            val pluralDays = context.resources.getStringArray(R.array.days_plurals)
-            val correctedDays = TextHelpers.getPluralWord(habit.periodicity, pluralDays)
-
-            val pluralTimes = context.resources.getStringArray(R.array.times_plurals)
-            val correctedTimes = TextHelpers.getPluralWord(habit.repetitions, pluralTimes)
-
+            val pluralTimes = context.resources.getQuantityString(R.plurals.times, habit.repetitions)
+            val pluralDays = context.resources.getQuantityString(R.plurals.days, habit.periodicity)
             val every = context.resources.getString(R.string.every)
-            val periodicity = "${habit.repetitions} $correctedTimes, $every ${habit.periodicity} $correctedDays"
+            val periodicity = "${habit.repetitions} $pluralTimes, $every ${habit.periodicity} $pluralDays"
             periodicityView.text = periodicity
             typeView.text = habit.type.toLocalString(context)
         }

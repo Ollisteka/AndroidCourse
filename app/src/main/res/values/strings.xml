@@ -30,17 +30,21 @@
         <item>Высокий</item>
     </string-array>
 
-    <string-array name="days_plurals">
-        <item name="0">дней</item>
-        <item name="1">день</item>
-        <item name="2">дня</item>
-        <item name="5">дней</item>
-    </string-array>
+    <plurals name="days">
+        <item quantity="zero">дней</item>
+        <item quantity="one">день</item>
+        <item quantity="two">дня</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+        <item quantity="other">дней</item>
+    </plurals>
 
-    <string-array name="times_plurals">
-        <item name="0">раз</item>
-        <item name="1">раз</item>
-        <item name="2">раза</item>
-        <item name="5">раз</item>
-    </string-array>
+    <plurals name="times">
+        <item quantity="zero">раз</item>
+        <item quantity="one">раз</item>
+        <item quantity="two">раза</item>
+        <item quantity="few">раза</item>
+        <item quantity="many">раз</item>
+        <item quantity="other">раз</item>
+    </plurals>
 </resources>
