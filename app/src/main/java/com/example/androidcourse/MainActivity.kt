@@ -1,8 +1,10 @@
 package com.example.androidcourse
 
+import HabitsViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -12,34 +14,23 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-private const val HABITS = "HABITS"
-
-interface IHabitsProvider {
-    fun getHabits(habitType: HabitType): List<Habit>
-    fun addHabitsWatcher(watcher: IHabitsWatcher)
+interface IHabitsObservable {
+    fun addHabitsObserver(observer: IHabitsObserver)
 }
 
-class MainActivity : AppCompatActivity(), IHabitsProvider, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNavigationItemSelectedListener {
     private lateinit var habitsPagerAdapter: HabitsListPagerAdapter
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var mToolbar: Toolbar
 
-    private var habits: MutableList<Habit> = mutableListOf(
-        Habit("Хорошая", "Описание", type = HabitType.Good),
-        Habit("Плохая", "Описание", type = HabitType.Bad)
-    )
-
-    private val habitsWatchersByType: MutableMap<HabitType, IHabitsWatcher> = mutableMapOf()
+    private val habitsWatchersByType: MutableMap<HabitType, IHabitsObserver> = mutableMapOf()
+    private val model: HabitsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mToolbar = toolbar as Toolbar
         setSupportActionBar(mToolbar)
-
-        savedInstanceState?.getParcelableArray(HABITS)?.let { savedHabits ->
-            habits = savedHabits.map { it as Habit }.toMutableList()
-        }
 
         habitsPagerAdapter = HabitsListPagerAdapter(this)
         pager.adapter = habitsPagerAdapter
@@ -59,18 +50,8 @@ class MainActivity : AppCompatActivity(), IHabitsProvider, NavigationView.OnNavi
         navDrawer.setNavigationItemSelectedListener(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putParcelableArray(HABITS, habits.toTypedArray())
-    }
-
-    override fun addHabitsWatcher(watcher: IHabitsWatcher) {
-        habitsWatchersByType[watcher.habitType] = watcher
-    }
-
-    override fun getHabits(habitType: HabitType): List<Habit> {
-        return habits.filter { it.type == habitType }
+    override fun addHabitsObserver(observer: IHabitsObserver) {
+        habitsWatchersByType[observer.habitType] = observer
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -81,17 +62,15 @@ class MainActivity : AppCompatActivity(), IHabitsProvider, NavigationView.OnNavi
     }
 
     private fun addOrUpdate(newHabit: Habit) {
-        val existingHabit = habits.withIndex().find { it.value.id == newHabit.id }
+        val existingHabit = model.findById(newHabit.id)
         if (existingHabit != null) {
-            habits[existingHabit.index] = newHabit
-            val oldType = existingHabit.value.type
+            val oldType = existingHabit.type
             if (oldType != newHabit.type) {
-                habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.value.id)
+                habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.id)
             }
-        } else {
-            habits.add(newHabit)
         }
-        habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit)
+        model.addOrUpdate(newHabit)
+        habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit.id)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

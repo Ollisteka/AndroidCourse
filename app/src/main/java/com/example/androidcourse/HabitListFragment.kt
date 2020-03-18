@@ -1,22 +1,23 @@
 package com.example.androidcourse
 
+import HabitsViewModel
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 import java.util.*
 
-private const val SAVED_HABITS = "SAVED_HABITS"
 private const val ARGS_HABIT_TYPE = "HABIT_TYPE"
 
-class HabitListFragment : Fragment(), IHabitsWatcher {
+class HabitListFragment : Fragment(), IHabitsObserver {
     private var habits: MutableList<Habit> = mutableListOf()
-    private var habitsProvider: IHabitsProvider? = null
+    private val model: HabitsViewModel by activityViewModels()
 
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -48,14 +49,7 @@ class HabitListFragment : Fragment(), IHabitsWatcher {
             habitType = it as HabitType
         }
 
-        if (savedInstanceState != null) {
-            savedInstanceState.getParcelableArray(SAVED_HABITS)?.let { habitsToLoad ->
-                habits = habitsToLoad.map { it as Habit }.toMutableList()
-            }
-        } else {
-            habits = habitsProvider?.getHabits(habitType)?.toMutableList() ?: mutableListOf()
-        }
-
+        habits = model.getHabits(habitType).toMutableList()
         viewManager = LinearLayoutManager(context)
         viewAdapter = MyHabitRecyclerViewAdapter(habits)
 
@@ -64,20 +58,12 @@ class HabitListFragment : Fragment(), IHabitsWatcher {
 
             adapter = viewAdapter
         }
-
-        habitsProvider?.addHabitsWatcher(this)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putParcelableArray(SAVED_HABITS, habits.toTypedArray())
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        habitsProvider = activity as IHabitsProvider
+        (activity as IHabitsObservable).addHabitsObserver(this)
     }
 
     override fun onHabitDelete(id: UUID) {
@@ -87,20 +73,20 @@ class HabitListFragment : Fragment(), IHabitsWatcher {
         }
     }
 
-    override fun onHabitEdit(habit: Habit) {
-        val existingHabit = habits.withIndex().find { it.value.id == habit.id }
+    override fun onHabitEdit(id: UUID) {
+        val existingHabit = habits.withIndex().find { it.value.id == id }
         if (existingHabit != null) {
-            updateHabit(habit, existingHabit.index)
-        } else addNewHabit(habit)
+            updateHabit(id, existingHabit.index)
+        } else addNewHabit(id)
     }
 
-    private fun updateHabit(habit: Habit, position: Int) {
-        habits[position] = habit
+    private fun updateHabit(id: UUID, position: Int) {
+        habits[position] = model.findById(id)!!
         viewAdapter.notifyItemChanged(position)
     }
 
-    private fun addNewHabit(habit: Habit) {
-        habits.add(habit)
+    private fun addNewHabit(id: UUID) {
+        habits.add(model.findById(id)!!)
         viewAdapter.notifyItemInserted(habits.size - 1)
     }
 }

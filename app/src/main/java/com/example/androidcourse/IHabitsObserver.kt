@@ -2,9 +2,9 @@ package com.example.androidcourse
 
 import java.util.*
 
-interface IHabitsWatcher {
+interface IHabitsObserver {
     val habitType: HabitType
 
-    fun onHabitEdit(habit: Habit)
+    fun onHabitEdit(id: UUID)
     fun onHabitDelete(id: UUID)
 }
