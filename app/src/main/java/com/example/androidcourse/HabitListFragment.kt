@@ -45,10 +45,6 @@ class HabitListFragment : Fragment(), IHabitsObserver {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getSerializable(ARGS_HABIT_TYPE)?.let {
-            habitType = it as HabitType
-        }
-
         habits = model.getHabits(habitType).toMutableList()
         viewManager = LinearLayoutManager(context)
         viewAdapter = MyHabitRecyclerViewAdapter(habits)
@@ -62,6 +58,10 @@ class HabitListFragment : Fragment(), IHabitsObserver {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        arguments?.getSerializable(ARGS_HABIT_TYPE)?.let {
+            habitType = it as HabitType
+        }
 
         (activity as IHabitsObservable).addHabitsObserver(this)
     }
