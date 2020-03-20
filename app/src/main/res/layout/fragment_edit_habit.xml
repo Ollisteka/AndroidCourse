@@ -1,152 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:context=".EditHabitFragment">
+<layout>
 
-    <LinearLayout
+    <data>
+
+        <variable
+                name="model"
+                type="com.example.androidcourse.EditableHabitViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="16dp"
+            tools:context=".EditHabitFragment">
 
-        <TextView
-                style="@style/TextViewStyle"
-                android:layout_marginTop="0dp"
-                android:text="@string/habitName" />
-
-        <TextView
-                style="@style/TextViewStyle"
-                android:layout_marginStart="4sp"
-                android:layout_marginLeft="4sp"
-                android:layout_marginTop="0dp"
-                android:text="*"
-                android:textColor="@color/accent" />
-    </LinearLayout>
-
-    <EditText
-            android:id="@+id/habitName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/habitNameHint"
-            android:importantForAutofill="no"
-            android:inputType="textCapSentences"
-            android:textSize="@dimen/text_size" />
-
-    <TextView
-            style="@style/TextViewStyle"
-            android:layout_marginTop="8dp"
-            android:text="@string/habitDescription" />
-
-    <EditText
-            android:id="@+id/habitDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/habitDescription"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            android:nextFocusDown="@id/habitRepetitions"
-            android:textSize="@dimen/text_size" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-        <TextView
-                style="@style/TextViewStyle"
-                android:layout_width="0dp"
-                android:layout_weight=".6"
-                android:text="@string/habitPriority" />
-
-        <Spinner
-                android:id="@+id/habitPriority"
-                android:layout_width="0dp"
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".4"
-                android:entries="@array/priority_array" />
-    </LinearLayout>
+                android:orientation="horizontal">
 
+            <TextView
+                    style="@style/TextViewStyle"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/habitName" />
 
-    <TextView
-            style="@style/TextViewStyle"
-            android:layout_marginTop="8dp"
-            android:text="@string/habitType" />
-
-    <RadioGroup
-            android:id="@+id/habitTypeRadio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:checkedButton="@id/radio_good"
-            android:orientation="vertical">
-
-        <RadioButton
-                android:id="@+id/radio_good"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/good" />
-
-        <RadioButton
-                android:id="@+id/radio_bad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bad" />
-    </RadioGroup>
-
-    <TextView
-            style="@style/TextViewStyle"
-            android:layout_marginTop="8dp"
-            android:text="@string/periodicity" />
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <TextView
+                    style="@style/TextViewStyle"
+                    android:layout_marginStart="4sp"
+                    android:layout_marginLeft="4sp"
+                    android:layout_marginTop="0dp"
+                    android:text="*"
+                    android:textColor="@color/accent" />
+        </LinearLayout>
 
         <EditText
-                android:id="@+id/habitRepetitions"
-                style="@style/TextViewStyle"
-                android:hint="@string/numberHint"
+                android:id="@+id/habitName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/habitNameHint"
                 android:importantForAutofill="no"
-                android:inputType="number"
-                android:nextFocusDown="@id/habitPeriodicity" />
+                android:inputType="textCapSentences"
+                android:text="@={model.name}"
+                android:textSize="@dimen/text_size" />
 
         <TextView
-                android:id="@+id/habitRepetitionLabel"
                 style="@style/TextViewStyle"
-                android:labelFor="@id/habitRepetitions"
-                android:text="@string/timesEvery"
-                android:textColor="@color/primary_text" />
+                android:layout_marginTop="8dp"
+                android:text="@string/habitDescription" />
 
         <EditText
-                android:id="@+id/habitPeriodicity"
-                style="@style/TextViewStyle"
-                android:focusable="true"
-                android:hint="@string/numberHint"
+                android:id="@+id/habitDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/habitDescription"
                 android:importantForAutofill="no"
-                android:inputType="number" />
+                android:inputType="textMultiLine"
+                android:nextFocusDown="@id/habitRepetitions"
+                android:text="@={model.description}"
+                android:textSize="@dimen/text_size" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+            <TextView
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight=".6"
+                    android:text="@string/habitPriority" />
+
+            <Spinner
+                    android:id="@+id/habitPriority"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:entries="@array/priority_array" />
+        </LinearLayout>
+
 
         <TextView
-                android:id="@+id/habitPeriodicityLabel"
                 style="@style/TextViewStyle"
-                android:labelFor="@id/habitPeriodicity"
-                android:text="@string/days"
-                android:textColor="@color/primary_text" />
+                android:layout_marginTop="8dp"
+                android:text="@string/habitType" />
 
+        <RadioGroup
+                android:id="@+id/habitTypeRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:checkedButton="@id/radio_good"
+                android:orientation="vertical">
+
+            <RadioButton
+                    android:id="@+id/radio_good"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/good" />
+
+            <RadioButton
+                    android:id="@+id/radio_bad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bad" />
+        </RadioGroup>
+
+        <TextView
+                style="@style/TextViewStyle"
+                android:layout_marginTop="8dp"
+                android:text="@string/periodicity" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <EditText
+                    android:id="@+id/habitRepetitions"
+                    style="@style/TextViewStyle"
+                    android:hint="@string/numberHint"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:nextFocusDown="@id/habitPeriodicity"
+                    android:text="@={model.stringRepetitions}" />
+
+            <TextView
+                    android:id="@+id/habitRepetitionLabel"
+                    style="@style/TextViewStyle"
+                    android:labelFor="@id/habitRepetitions"
+                    android:text="@string/timesEvery"
+                    android:textColor="@color/primary_text" />
+
+            <EditText
+                    android:id="@+id/habitPeriodicity"
+                    style="@style/TextViewStyle"
+                    android:focusable="true"
+                    android:hint="@string/numberHint"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:text="@={model.stringPeriodicity}" />
+
+            <TextView
+                    android:id="@+id/habitPeriodicityLabel"
+                    style="@style/TextViewStyle"
+                    android:labelFor="@id/habitPeriodicity"
+                    android:text="@string/days"
+                    android:textColor="@color/primary_text" />
+
+        </LinearLayout>
+
+
+        <Button
+                android:id="@+id/saveHabitButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/save_button"
+                android:enabled="false"
+                android:text="@string/save"
+                android:textColor="@color/icons" />
     </LinearLayout>
-
-
-    <Button
-            android:id="@+id/saveHabitButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/save_button"
-            android:enabled="false"
-            android:text="@string/save"
-            android:textColor="@color/icons" />
-</LinearLayout>
+</layout>

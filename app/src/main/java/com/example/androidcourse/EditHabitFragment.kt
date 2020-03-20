@@ -5,14 +5,19 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.example.androidcourse.databinding.FragmentEditHabitBinding
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
-import java.util.*
+
 
 class EditHabitFragment : Fragment() {
-    private var habitId: UUID? = null
+    private val model: EditableHabitViewModel by viewModels()
+    private lateinit var binding: FragmentEditHabitBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +30,12 @@ class EditHabitFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_edit_habit, container, false)
+
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_edit_habit, container, false
+        )
+        binding.model = model
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,59 +53,54 @@ class EditHabitFragment : Fragment() {
         habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
         habitPeriodicity.doAfterTextChanged { setPeriodicityLabel() }
 
+        habitPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                model.priority = Priority.getByValue(position)
+            }
+
+        }
+
+        habitTypeRadio.setOnCheckedChangeListener { _, checkedId ->
+            model.type = when (checkedId) {
+                R.id.radio_bad -> HabitType.Bad
+                R.id.radio_good -> HabitType.Good
+                else -> throw Exception("You forgot to create new HabitType or handle it here")
+            }
+        }
+
         setRepetitionLabel()
         setPeriodicityLabel()
     }
 
     fun update(habitToEdit: Habit) {
-        habitId = habitToEdit.id
-        habitName.setText(habitToEdit.name)
-        habitDescription.setText(habitToEdit.description)
-        habitPriority.setSelection(habitToEdit.priority.value)
+        model.update(habitToEdit)
+        binding.invalidateAll()
+
         habitTypeRadio.check(
-            when (habitToEdit.type) {
+            when (model.type) {
                 HabitType.Bad -> R.id.radio_bad
                 HabitType.Good -> R.id.radio_good
             }
         )
-        habitRepetitions.setText(habitToEdit.repetitions.toString())
-        habitPeriodicity.setText(habitToEdit.periodicity.toString())
+
+        habitPriority.setSelection(model.priority.value)
     }
 
 
     fun getHabit(): Habit {
-        val name = habitName.text.toString()
-        val description = getValueOrDefault(habitDescription, R.string.habitDescription)
-        val priority = Priority.getByValue(habitPriority.selectedItemPosition)
-        val type =
-            when (habitTypeRadio.checkedRadioButtonId) {
-                R.id.radio_bad -> HabitType.Bad
-                R.id.radio_good -> HabitType.Good
-                else -> throw Exception("You forgot to create new HabitType or handle it here")
-            }
-
-        val id = habitId ?: UUID.randomUUID()
-        return Habit(name, description, priority, type, getRepetitions(), getPeriodicity(), id = id)
-    }
-
-    private fun getValueOrDefault(view: EditText, defaultResourceId: Int): String {
-        return view.text.toString().let { if (TextUtils.isEmpty(it)) getString(defaultResourceId) else it }
-    }
-
-    private fun getRepetitions(): Int {
-        return getValueOrDefault(habitRepetitions, R.string.numberHint).toInt()
-    }
-
-    private fun getPeriodicity(): Int {
-        return getValueOrDefault(habitPeriodicity, R.string.numberHint).toInt()
+        return model.getHabit()
     }
 
     private fun setRepetitionLabel() {
-        val pluralTimes = resources.getQuantityString(R.plurals.times, getRepetitions())
+        val pluralTimes = resources.getQuantityString(R.plurals.times, model.repetitions ?: getString(R.string.numberHint).toInt())
         habitRepetitionLabel.text = getString(R.string.timesEvery, pluralTimes)
     }
 
     private fun setPeriodicityLabel() {
-        habitPeriodicityLabel.text = resources.getQuantityString(R.plurals.days, getPeriodicity())
+        habitPeriodicityLabel.text = resources.getQuantityString(R.plurals.days, model.periodicity ?: getString(R.string.numberHint).toInt())
     }
 }
