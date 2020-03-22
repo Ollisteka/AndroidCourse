@@ -35,6 +35,7 @@ class EditHabitFragment : Fragment() {
             inflater, R.layout.fragment_edit_habit, container, false
         )
         binding.model = model
+        binding.executePendingBindings()
         return binding.root
     }
 
