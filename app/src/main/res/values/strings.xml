@@ -25,6 +25,7 @@
     <string name="menu_item_about">О приложении</string>
     <string name="tab_name_good">Хорошие</string>
     <string name="tab_name_bad">Плохие</string>
+    <string name="bottom_name">Фильтры и сортировки</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>

@@ -12,6 +12,12 @@ class HabitsViewModel : ViewModel() {
     private fun loadHabits(): MutableList<Habit> {
         return mutableListOf(
             Habit("Хорошая", "Описание", type = HabitType.Good),
+            Habit("Хорошая1", "Описание", type = HabitType.Good),
+            Habit("Хорошая2", "Описание", type = HabitType.Good),
+            Habit("Хорошая3", "Описание", type = HabitType.Good),
+            Habit("Хорошая4", "Описание", type = HabitType.Good),
+            Habit("Хорошая4", "Описание", type = HabitType.Good),
+            Habit("Хорошая4", "Описание", type = HabitType.Good),
             Habit("Плохая", "Описание", type = HabitType.Bad)
         )
     }
