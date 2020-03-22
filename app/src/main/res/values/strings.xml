@@ -26,6 +26,16 @@
     <string name="tab_name_good">Хорошие</string>
     <string name="tab_name_bad">Плохие</string>
     <string name="bottom_name">Фильтры и сортировки</string>
+    <string name="sort_by_name">По названию</string>
+    <string name="sort_name_asc">А-Я</string>
+    <string name="sort_name_desc">Я-А</string>
+    <string name="sort_none">Нет</string>
+    <string name="sort_days">По дням</string>
+    <string name="sort_days_asc">0..9</string>
+    <string name="sort_days_desc">9..0</string>
+    <string name="search">Поиск</string>
+    <string name="searchHint">Введите название привычки</string>
+    <string name="sorting">Сортировка</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
