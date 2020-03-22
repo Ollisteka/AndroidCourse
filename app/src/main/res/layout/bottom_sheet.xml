@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="340dp"
         android:background="@android:color/white"
-        android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
+        android:orientation="vertical"
         app:behavior_hideable="false"
         app:behavior_peekHeight="64dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -113,6 +114,31 @@
             </RadioGroup>
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/text_margin">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/searchEdit"
+                android:text="Поиск"
+                android:textColor="@color/primary_text" />
+
+        <EditText
+                android:id="@+id/searchEdit"
+                style="@style/Text.SingleLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Введите название привычки"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:text="@={model.searchWord}"
+                tools:text="Введите название привычки" />
     </LinearLayout>
 
 </LinearLayout>

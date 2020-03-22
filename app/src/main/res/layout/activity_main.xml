@@ -25,15 +25,14 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
             <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="64dp"
-                    app:layout_dodgeInsetEdges="bottom" />
+                    android:paddingBottom="64dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/addHabitButton"
@@ -51,8 +50,7 @@
 
             <include
                     android:id="@+id/filterBottomSheet"
-                    layout="@layout/bottom_sheet"
-                    app:layout_insetEdge="bottom" />
+                    layout="@layout/bottom_sheet" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
 

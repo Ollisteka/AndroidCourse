@@ -1,5 +1,6 @@
 package com.example.androidcourse
 
+import android.text.TextUtils
 import android.widget.RadioGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,8 +23,18 @@ class HabitsViewModel : ViewModel() {
         )
     }
 
+    private var _searchWord = ""
+    var searchWord
+        get() = _searchWord
+        set(value) {
+            if (value != _searchWord) {
+                _searchWord = value
+                dataSetChanged.value = !dataSetChanged.value!!
+            }
+        }
+
     fun getHabits(habitType: HabitType): List<Habit> {
-        val filtered = habits.filter { it.type == habitType }
+        val filtered = habits.filter { it.type == habitType && (TextUtils.isEmpty(searchWord) || it.name.contains(searchWord)) }
 
         val comparator = if (ascSort.size > 0) {
             var comparator = compareBy(*(ascSort.toTypedArray()))

@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             }
         }
 
+        searchEdit.doAfterTextChanged { text -> model.searchWord = text.toString() }
+        searchEdit.setText(model.searchWord)
 
         drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         drawerToggle.isDrawerIndicatorEnabled = true
