@@ -36,6 +36,7 @@
     <string name="search">Поиск</string>
     <string name="searchHint">Введите название привычки</string>
     <string name="sorting">Сортировка</string>
+    <string name="no_habits">Привычек нет.\nПроверьте фильтр или создайте новые</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>

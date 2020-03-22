@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 import java.util.*
 
+
 private const val ARGS_HABIT_TYPE = "HABIT_TYPE"
 
 class HabitListFragment : Fragment(), IHabitsObserver {
@@ -53,6 +54,7 @@ class HabitListFragment : Fragment(), IHabitsObserver {
 
             adapter = viewAdapter
         }
+        togglePlaceHolder()
     }
 
     override fun onAttach(context: Context) {
@@ -79,6 +81,7 @@ class HabitListFragment : Fragment(), IHabitsObserver {
         }
 
         viewAdapter.notifyDataSetChanged()
+        togglePlaceHolder()
     }
 
     override fun onHabitEdit(id: UUID) {
@@ -96,5 +99,9 @@ class HabitListFragment : Fragment(), IHabitsObserver {
     private fun addNewHabit(id: UUID) {
         habits.add(model.findById(id)!!)
         viewAdapter.notifyItemInserted(habits.size - 1)
+    }
+
+    private fun togglePlaceHolder() {
+        list_empty.visibility = if (habits.isEmpty()) View.VISIBLE else View.GONE
     }
 }
