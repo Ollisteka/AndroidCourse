@@ -16,9 +16,9 @@ class HabitsViewModel : ViewModel() {
             Habit("Старая", "Описание", periodicity = 1, type = HabitType.Good),
             Habit("AХорошая", "Описание", periodicity = 10, type = HabitType.Good),
             Habit("БХорошая", "Описание", periodicity = 19, type = HabitType.Good),
-            Habit("ВХорошая", "Описание", periodicity = 6, type = HabitType.Good),
-            Habit("ГХорошая", "Описание", periodicity = 6, type = HabitType.Good),
-            Habit("Хорошая", "Описание", periodicity = 12, type = HabitType.Good),
+            Habit("ВХорошая", "Описание", periodicity = 6, type = HabitType.Bad),
+            Habit("ГХорошая", "Описание", periodicity = 6, type = HabitType.Bad),
+            Habit("Хорошая", "Описание", periodicity = 12, type = HabitType.Bad),
             Habit("Новая", "Описание", periodicity = 100, type = HabitType.Good)
         )
     }
@@ -33,7 +33,7 @@ class HabitsViewModel : ViewModel() {
             }
         }
 
-    fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord)
+    fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord, true)
 
     fun getHabits(habitType: HabitType): List<Habit> {
         val filtered = habits.filter { it.type == habitType && matches(it) }
