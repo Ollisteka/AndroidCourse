@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
@@ -53,25 +52,7 @@ class EditHabitFragment : Fragment() {
 
         habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
         habitPeriodicity.doAfterTextChanged { setPeriodicityLabel() }
-
-        habitPriority.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                model.priority = Priority.getByValue(position)
-            }
-
-        }
-
-        habitTypeRadio.setOnCheckedChangeListener { _, checkedId ->
-            model.type = when (checkedId) {
-                R.id.radio_bad -> HabitType.Bad
-                R.id.radio_good -> HabitType.Good
-                else -> throw Exception("You forgot to create new HabitType or handle it here")
-            }
-        }
+        habitPriority.onItemSelectedListener = model.priorityUpdater
 
         setRepetitionLabel()
         setPeriodicityLabel()

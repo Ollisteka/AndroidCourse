@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
                 name="model"
                 type="com.example.androidcourse.EditableHabitViewModel" />
@@ -93,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:checkedButton="@id/radio_good"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:onCheckedChangeListener="@{(group, checkedId) -> model.setType(checkedId)}">
 
             <RadioButton
                     android:id="@+id/radio_good"
