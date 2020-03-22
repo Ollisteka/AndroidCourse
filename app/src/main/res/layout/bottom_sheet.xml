@@ -13,6 +13,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
+            android:id="@+id/bottom_sheet_header"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@color/primary_light"
