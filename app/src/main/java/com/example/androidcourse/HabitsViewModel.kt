@@ -33,8 +33,10 @@ class HabitsViewModel : ViewModel() {
             }
         }
 
+    fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord)
+
     fun getHabits(habitType: HabitType): List<Habit> {
-        val filtered = habits.filter { it.type == habitType && (TextUtils.isEmpty(searchWord) || it.name.contains(searchWord)) }
+        val filtered = habits.filter { it.type == habitType && matches(it) }
 
         val comparator = if (ascSort.size > 0) {
             var comparator = compareBy(*(ascSort.toTypedArray()))

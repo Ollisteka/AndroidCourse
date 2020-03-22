@@ -116,12 +116,13 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         val existingHabit = model.findById(newHabit.id)
         if (existingHabit != null) {
             val oldType = existingHabit.type
-            if (oldType != newHabit.type) {
+            if (oldType != newHabit.type || !model.matches(newHabit)) {
                 habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.id)
             }
         }
         model.addOrUpdate(newHabit)
-        habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit.id)
+        if (model.matches(newHabit))
+            habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit.id)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
