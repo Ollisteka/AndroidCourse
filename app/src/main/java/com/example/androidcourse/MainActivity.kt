@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,6 +26,11 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
     private val habitsWatchersByType: MutableMap<HabitType, IHabitsObserver> = mutableMapOf()
     private val model: HabitsViewModel by viewModels()
+
+    private val dataSetChangedObserver = Observer<Any> {
+        habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
+        habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,27 +50,10 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             startActivity(sendIntent)
         }
 
-        nameRadio.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radio_name_asc -> model.sortBy(Habit::name)
-                R.id.radio_name_desc -> model.sortByDesc(Habit::name)
-                R.id.radio_name_none -> model.clearSortBy(Habit::name)
-            }
+        model.dataSetChanged.observe(this, dataSetChangedObserver)
 
-            habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
-            habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
-        }
-
-        periodicityRadio.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radio_periodicity_asc -> model.sortBy(Habit::periodicity)
-                R.id.radio_periodicity_desc -> model.sortByDesc(Habit::periodicity)
-                R.id.radio_periodicity_none -> model.clearSortBy(Habit::periodicity)
-            }
-
-            habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
-            habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
-        }
+        nameRadio.setOnCheckedChangeListener(model.nameSortListener)
+        periodicityRadio.setOnCheckedChangeListener(model.periodicitySortListener)
 
         drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         drawerToggle.isDrawerIndicatorEnabled = true
@@ -103,5 +92,11 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
         navDrawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        model.dataSetChanged.removeObserver(dataSetChangedObserver)
     }
 }

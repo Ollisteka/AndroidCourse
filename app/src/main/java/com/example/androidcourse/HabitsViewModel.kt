@@ -1,14 +1,9 @@
 package com.example.androidcourse
 
+import android.widget.RadioGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
-
-enum class Sorts {
-    NAME_ASC,
-    NAME_DESC,
-    CREATION_ASC,
-    CREATION_DESC
-}
 
 class HabitsViewModel : ViewModel() {
     private val habits: MutableList<Habit> by lazy {
@@ -29,9 +24,6 @@ class HabitsViewModel : ViewModel() {
 
     fun getHabits(habitType: HabitType): List<Habit> {
         val filtered = habits.filter { it.type == habitType }
-
-        if (ascSort.size == 0 && descSort.size == 0)
-            return filtered
 
         val comparator = if (ascSort.size > 0) {
             var comparator = compareBy(*(ascSort.toTypedArray()))
@@ -65,23 +57,44 @@ class HabitsViewModel : ViewModel() {
         return getIndexedHabit(id)?.value
     }
 
-    var ascSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
-    var descSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
+    private var ascSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
+    private var descSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
 
-    fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
-        clearSortBy(fn)
+    val dataSetChanged: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
+        descSort.remove(fn)
         ascSort.add(fn)
+        dataSetChanged.value = !dataSetChanged.value!!
     }
 
-    fun <T : Comparable<T>> sortByDesc(fn: Habit.() -> T) {
-        clearSortBy(fn)
+    private fun <T : Comparable<T>> sortByDesc(fn: Habit.() -> T) {
+        ascSort.remove(fn)
         descSort.add(fn)
+        dataSetChanged.value = !dataSetChanged.value!!
     }
 
-    fun <T : Comparable<T>> clearSortBy(fn: Habit.() -> T) {
+    private fun <T : Comparable<T>> clearSortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
         ascSort.remove(fn)
+        dataSetChanged.value = !dataSetChanged.value!!
     }
 
     private fun getIndexedHabit(id: UUID) = habits.withIndex().find { it.value.id == id }
+
+    val periodicitySortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
+        when (checkedId) {
+            R.id.radio_periodicity_asc -> sortBy(Habit::periodicity)
+            R.id.radio_periodicity_desc -> sortByDesc(Habit::periodicity)
+            R.id.radio_periodicity_none -> clearSortBy(Habit::periodicity)
+        }
+    }
+
+    val nameSortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
+        when (checkedId) {
+            R.id.radio_name_asc -> sortBy(Habit::name)
+            R.id.radio_name_desc -> sortByDesc(Habit::name)
+            R.id.radio_name_none -> clearSortBy(Habit::name)
+        }
+    }
 }
