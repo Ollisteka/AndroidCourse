@@ -40,12 +40,14 @@ class HabitsViewModel : ViewModel() {
             }
             comparator
 
-        } else {
+        } else if (descSort.size > 0) {
             var comparator = compareByDescending(descSort[0])
             for (i in 1 until descSort.size) {
                 comparator = comparator.thenByDescending(descSort[i])
             }
             comparator
+        } else {
+            compareBy(Habit::creationDate)
         }
         return filtered.sortedWith(comparator)
     }

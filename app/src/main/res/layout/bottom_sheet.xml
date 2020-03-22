@@ -68,6 +68,7 @@
                         android:id="@+id/radio_name_none"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="Нет" />
             </RadioGroup>
         </LinearLayout>
@@ -106,6 +107,7 @@
                         android:id="@+id/radio_periodicity_none"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="Нет" />
             </RadioGroup>
         </LinearLayout>
