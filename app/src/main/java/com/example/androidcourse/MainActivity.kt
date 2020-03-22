@@ -1,13 +1,17 @@
 package com.example.androidcourse
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
@@ -33,6 +37,27 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
     }
 
+    private lateinit var sheetBehavior: BottomSheetBehavior<View>
+    private var isCollapsedFromBackPress: Boolean = false
+
+    private val bottomSliderCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+        }
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED && isCollapsedFromBackPress) {
+                isCollapsedFromBackPress = false
+            }
+
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val imm: InputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                val view: View = currentFocus ?: View(this@MainActivity)
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,7 +81,8 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         nameRadio.setOnCheckedChangeListener(model.nameSortListener)
         periodicityRadio.setOnCheckedChangeListener(model.periodicitySortListener)
 
-        val sheetBehavior = BottomSheetBehavior.from(filterBottomSheet);
+        sheetBehavior = BottomSheetBehavior.from(filterBottomSheet)
+        sheetBehavior.addBottomSheetCallback(bottomSliderCallback)
         bottom_sheet_header.setOnClickListener {
             if (sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
                 sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -105,6 +131,15 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
         navDrawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onBackPressed() {
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            isCollapsedFromBackPress = true
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
