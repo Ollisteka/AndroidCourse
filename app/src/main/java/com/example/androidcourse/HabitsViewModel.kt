@@ -1,6 +1,6 @@
+package com.example.androidcourse
+
 import androidx.lifecycle.ViewModel
-import com.example.androidcourse.Habit
-import com.example.androidcourse.HabitType
 import java.util.*
 
 
