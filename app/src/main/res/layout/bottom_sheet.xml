@@ -61,6 +61,50 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Я-А" />
+
+                <RadioButton
+                        android:id="@+id/radio_name_none"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Нет" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/text_margin">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="По дням" />
+
+            <RadioGroup
+                    android:id="@+id/periodicityRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <RadioButton
+                        android:id="@+id/radio_periodicity_asc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0..9" />
+
+                <RadioButton
+                        android:id="@+id/radio_periodicity_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9..0" />
+
+                <RadioButton
+                        android:id="@+id/radio_periodicity_none"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Нет" />
             </RadioGroup>
         </LinearLayout>
 

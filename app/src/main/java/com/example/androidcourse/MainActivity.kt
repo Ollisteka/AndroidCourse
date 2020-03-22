@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet.*
 
 
 interface IHabitsObservable {
@@ -42,6 +43,29 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
             startActivity(sendIntent)
         }
+
+        nameRadio.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radio_name_asc -> model.sortBy(Habit::name)
+                R.id.radio_name_desc -> model.sortByDesc(Habit::name)
+                R.id.radio_name_none -> model.clearSortBy(Habit::name)
+            }
+
+            habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
+            habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
+        }
+
+        periodicityRadio.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radio_periodicity_asc -> model.sortBy(Habit::periodicity)
+                R.id.radio_periodicity_desc -> model.sortByDesc(Habit::periodicity)
+                R.id.radio_periodicity_none -> model.clearSortBy(Habit::periodicity)
+            }
+
+            habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
+            habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
+        }
+
         drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         drawerToggle.isDrawerIndicatorEnabled = true
         navDrawerLayout.addDrawerListener(drawerToggle)

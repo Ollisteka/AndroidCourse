@@ -7,4 +7,5 @@ interface IHabitsObserver {
 
     fun onHabitEdit(id: UUID)
     fun onHabitDelete(id: UUID)
+    fun notifyDataSetHasChanged()
 }

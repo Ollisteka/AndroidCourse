@@ -72,6 +72,15 @@ class HabitListFragment : Fragment(), IHabitsObserver {
         }
     }
 
+    override fun notifyDataSetHasChanged() {
+        habits.clear()
+        model.getHabits(habitType).map {
+            habits.add(it)
+        }
+
+        viewAdapter.notifyDataSetChanged()
+    }
+
     override fun onHabitEdit(id: UUID) {
         val existingHabit = habits.withIndex().find { it.value.id == id }
         if (existingHabit != null) {
