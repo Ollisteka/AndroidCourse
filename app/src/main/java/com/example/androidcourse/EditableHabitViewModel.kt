@@ -15,6 +15,7 @@ class EditableHabitViewModel : ViewModel() {
     var periodicity: Int? = null
     var color: String = "#388E3C"
     private var id: UUID = UUID.randomUUID()
+    var creationDate: Calendar = Calendar.getInstance()
 
     var stringRepetitions: String
         get() = repetitions?.toString() ?: ""
@@ -52,11 +53,12 @@ class EditableHabitViewModel : ViewModel() {
         repetitions = habit.repetitions
         periodicity = habit.periodicity
         color = habit.color
+        creationDate = habit.creationDate
         id = habit.id
     }
 
     fun getHabit(): Habit {
-        return Habit(name, description, priority, type, repetitions ?: 10, periodicity ?: 10, color, id)
+        return Habit(name, description, priority, type, repetitions ?: 10, periodicity ?: 10, color, id, creationDate)
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {
