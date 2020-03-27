@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.min
 
 
 private const val ARGS_HABIT_TYPE = "HABIT_TYPE"
@@ -46,6 +49,7 @@ class HabitListFragment : Fragment(), IHabitsObserver {
         super.onViewCreated(view, savedInstanceState)
 
         habits = model.getHabits(habitType).toMutableList()
+        model.habitsLiveData.observe(viewLifecycleOwner, Observer { updateHabits() })
         viewManager = LinearLayoutManager(context)
         viewAdapter = MyHabitRecyclerViewAdapter(habits)
 
@@ -67,38 +71,43 @@ class HabitListFragment : Fragment(), IHabitsObserver {
         (activity as IHabitsObservable).addHabitsObserver(this)
     }
 
-    override fun onHabitDelete(id: UUID) {
-        habits.withIndex().find { it.value.id == id }?.let { (index, _) ->
-            habits.removeAt(index)
-            viewAdapter.notifyItemRemoved(index)
-        }
-    }
+    private fun updateHabits() {
+        val newHabits = model.getHabits(habitType)
+        val oldSize = habits.size
 
-    override fun notifyDataSetHasChanged() {
-        habits.clear()
-        model.getHabits(habitType).map {
-            habits.add(it)
+        updateHabits(oldSize, newHabits)
+        if (oldSize < newHabits.size) {
+            insertHabits(newHabits, oldSize)
+        } else if (oldSize > newHabits.size) {
+            removeTail(newHabits.size, oldSize - newHabits.size)
         }
 
-        viewAdapter.notifyDataSetChanged()
         togglePlaceHolder()
     }
 
-    override fun onHabitEdit(id: UUID) {
-        val existingHabit = habits.withIndex().find { it.value.id == id }
-        if (existingHabit != null) {
-            updateHabit(id, existingHabit.index)
-        } else addNewHabit(id)
+    private fun updateHabits(oldSize: Int, newHabits: List<Habit>) {
+        for (i in 0 until min(oldSize, newHabits.size)) {
+            if (habits[i] != newHabits[i]) {
+                habits[i] = newHabits[i]
+                viewAdapter.notifyItemChanged(i)
+            }
+        }
     }
 
-    private fun updateHabit(id: UUID, position: Int) {
-        habits[position] = model.findById(id)!!
-        viewAdapter.notifyItemChanged(position)
+    private fun insertHabits(newHabits: List<Habit>, oldSize: Int) {
+        for (i in oldSize until newHabits.size) {
+            habits.add(newHabits[i])
+        }
+
+        viewAdapter.notifyItemRangeInserted(oldSize, abs(oldSize - newHabits.size))
     }
 
-    private fun addNewHabit(id: UUID) {
-        habits.add(model.findById(id)!!)
-        viewAdapter.notifyItemInserted(habits.size - 1)
+    private fun removeTail(positionStart: Int, itemsCount: Int) {
+        for (i in 0 until itemsCount) {
+            habits.removeAt(habits.size - 1)
+        }
+
+        viewAdapter.notifyItemRangeRemoved(positionStart, itemsCount)
     }
 
     private fun togglePlaceHolder() {

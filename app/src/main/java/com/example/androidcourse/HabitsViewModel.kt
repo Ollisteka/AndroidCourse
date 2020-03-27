@@ -11,6 +11,8 @@ class HabitsViewModel : ViewModel() {
         loadHabits()
     }
 
+    val habitsLiveData: MutableLiveData<List<Habit>> = MutableLiveData(loadHabits())
+
     private fun loadHabits(): MutableList<Habit> {
         return mutableListOf(
             Habit("Старая", "Описание", periodicity = 1, type = HabitType.Good),
@@ -29,11 +31,11 @@ class HabitsViewModel : ViewModel() {
         set(value) {
             if (value != _searchWord) {
                 _searchWord = value
-                dataSetChanged.value = !dataSetChanged.value!!
+                habitsLiveData.value = habits
             }
         }
 
-    fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord, true)
+    private fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord, true)
 
     fun getHabits(habitType: HabitType): List<Habit> {
         val filtered = habits.filter { it.type == habitType && matches(it) }
@@ -64,36 +66,31 @@ class HabitsViewModel : ViewModel() {
         } else {
             habits.add(newHabit)
         }
-    }
-
-    fun findById(id: UUID): Habit? {
-        return getIndexedHabit(id)?.value
+        habitsLiveData.value = habits
     }
 
     private var ascSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
     private var descSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
 
-    val dataSetChanged: MutableLiveData<Boolean> = MutableLiveData(false)
-
     private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
         ascSort.add(fn)
-        dataSetChanged.value = !dataSetChanged.value!!
+        habitsLiveData.value = habits
     }
 
     private fun <T : Comparable<T>> sortByDesc(fn: Habit.() -> T) {
         ascSort.remove(fn)
         descSort.add(fn)
-        dataSetChanged.value = !dataSetChanged.value!!
+        habitsLiveData.value = habits
     }
 
     private fun <T : Comparable<T>> clearSortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
         ascSort.remove(fn)
-        dataSetChanged.value = !dataSetChanged.value!!
+        habitsLiveData.value = habits
     }
 
-    private fun getIndexedHabit(id: UUID) = habits.withIndex().find { it.value.id == id }
+    private fun getIndexedHabit(id: UUID): IndexedValue<Habit>? = habits.withIndex().find { it.value.id == id }
 
     val periodicitySortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
         when (checkedId) {

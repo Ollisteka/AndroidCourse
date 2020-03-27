@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -31,11 +30,6 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
     private val habitsWatchersByType: MutableMap<HabitType, IHabitsObserver> = mutableMapOf()
     private val model: HabitsViewModel by viewModels()
-
-    private val dataSetChangedObserver = Observer<Any> {
-        habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
-        habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
-    }
 
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private var isCollapsedFromBackPress: Boolean = false
@@ -76,8 +70,6 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             startActivity(sendIntent)
         }
 
-        model.dataSetChanged.observe(this, dataSetChangedObserver)
-
         nameRadio.setOnCheckedChangeListener(model.nameSortListener)
         periodicityRadio.setOnCheckedChangeListener(model.periodicitySortListener)
 
@@ -109,20 +101,7 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         super.onNewIntent(intent)
         setIntent(intent)
 
-        intent?.getParcelableExtra<Habit?>(EXTRA.NEW_HABIT)?.let { addOrUpdate(it) }
-    }
-
-    private fun addOrUpdate(newHabit: Habit) {
-        val existingHabit = model.findById(newHabit.id)
-        if (existingHabit != null) {
-            val oldType = existingHabit.type
-            if (oldType != newHabit.type || !model.matches(newHabit)) {
-                habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.id)
-            }
-        }
-        model.addOrUpdate(newHabit)
-        if (model.matches(newHabit))
-            habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit.id)
+        intent?.getParcelableExtra<Habit?>(EXTRA.NEW_HABIT)?.let { model.addOrUpdate(it) }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -141,11 +120,5 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        model.dataSetChanged.removeObserver(dataSetChangedObserver)
     }
 }
