@@ -3,11 +3,13 @@ package com.example.androidcourse
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
 @Entity(tableName = "habits")
+@TypeConverters(PriorityConverter::class, HabitTypeConverter::class, CalendarConverter::class, UUIDConverter::class)
 class Habit(
     val name: String,
     val description: String,
@@ -19,5 +21,4 @@ class Habit(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
     val creationDate: Calendar = Calendar.getInstance()
-) : Parcelable {
-}
+) : Parcelable
