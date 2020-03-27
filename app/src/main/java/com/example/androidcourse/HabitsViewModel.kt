@@ -1,28 +1,22 @@
 package com.example.androidcourse
 
+import android.app.Application
 import android.text.TextUtils
 import android.widget.RadioGroup
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.util.*
-
-class HabitsViewModel : ViewModel() {
+class HabitsViewModel(application: Application) : AndroidViewModel(application) {
     private val habits: MutableList<Habit> by lazy {
-        loadHabits()
+        loadHabits().toMutableList()
     }
 
     val habitsLiveData: MutableLiveData<List<Habit>> = MutableLiveData(loadHabits())
+    private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
+    private val habitsDao = db?.habitsDao()
 
-    private fun loadHabits(): MutableList<Habit> {
-        return mutableListOf(
-            Habit("Старая", "Описание", periodicity = 1, type = HabitType.Good),
-            Habit("AХорошая", "Описание", periodicity = 10, type = HabitType.Good),
-            Habit("БХорошая", "Описание", periodicity = 19, type = HabitType.Good),
-            Habit("ВХорошая", "Описание", periodicity = 6, type = HabitType.Bad),
-            Habit("ГХорошая", "Описание", periodicity = 6, type = HabitType.Bad),
-            Habit("Хорошая", "Описание", periodicity = 12, type = HabitType.Bad),
-            Habit("Новая", "Описание", periodicity = 100, type = HabitType.Good)
-        )
+    private fun loadHabits(): List<Habit> {
+        return habitsDao?.habits ?: listOf()
     }
 
     private var _searchWord = ""
@@ -62,8 +56,10 @@ class HabitsViewModel : ViewModel() {
     fun addOrUpdate(newHabit: Habit) {
         val existingHabit = getIndexedHabit(newHabit.id)
         if (existingHabit != null) {
+            habitsDao?.update(newHabit)
             habits[existingHabit.index] = newHabit
         } else {
+            habitsDao?.insert(newHabit)
             habits.add(newHabit)
         }
         habitsLiveData.value = habits
