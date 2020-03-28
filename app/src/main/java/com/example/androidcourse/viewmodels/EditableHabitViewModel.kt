@@ -1,16 +1,21 @@
 package com.example.androidcourse.viewmodels
 
+import android.app.Application
 import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.example.androidcourse.R
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
-import com.example.androidcourse.R
+import com.example.androidcourse.database.HabitsDatabase
 import java.util.*
 
-class EditableHabitViewModel : ViewModel() {
+class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
+    private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
+    private val habitsDao = db?.habitsDao()
+
     var name: String = ""
     var description: String = ""
     var priority: Priority = Priority.Low
@@ -61,7 +66,7 @@ class EditableHabitViewModel : ViewModel() {
         id = habit.id
     }
 
-    fun getHabit(): Habit {
+    private fun getHabit(): Habit {
         return Habit(
             name,
             description,
@@ -73,6 +78,10 @@ class EditableHabitViewModel : ViewModel() {
             id,
             creationDate
         )
+    }
+
+    fun saveHabit() {
+        habitsDao?.upsert(getHabit())
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {

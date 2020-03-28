@@ -77,9 +77,7 @@ class EditHabitFragment : Fragment() {
     }
 
 
-    fun getHabit(): Habit {
-        return model.getHabit()
-    }
+    fun saveHabit() = model.saveHabit()
 
     private fun setRepetitionLabel() {
         val pluralTimes = resources.getQuantityString(

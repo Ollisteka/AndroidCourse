@@ -6,9 +6,9 @@ import android.widget.RadioGroup
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.androidcourse.R
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
-import com.example.androidcourse.R
 import com.example.androidcourse.database.HabitsDatabase
 
 
@@ -73,8 +73,6 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         }
         return filtered.sortedWith(comparator)
     }
-
-    fun addOrUpdate(newHabit: Habit) = habitsDao?.upsert(newHabit)
 
     private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
