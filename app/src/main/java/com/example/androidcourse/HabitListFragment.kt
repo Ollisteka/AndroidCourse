@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_habit_list.*
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -48,8 +47,9 @@ class HabitListFragment : Fragment(), IHabitsObserver {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        habits = model.getHabits(habitType).toMutableList()
-        model.habitsLiveData.observe(viewLifecycleOwner, Observer { updateHabits() })
+        habits = model.habitsByType[habitType]?.value?.toMutableList() ?: mutableListOf()
+        model.initObserve(habitType).observe(viewLifecycleOwner, Observer { })
+        model.habitsByType[habitType]?.observe(viewLifecycleOwner, Observer { updateHabits(it) })
         viewManager = LinearLayoutManager(context)
         viewAdapter = MyHabitRecyclerViewAdapter(habits)
 
@@ -71,8 +71,7 @@ class HabitListFragment : Fragment(), IHabitsObserver {
         (activity as IHabitsObservable).addHabitsObserver(this)
     }
 
-    private fun updateHabits() {
-        val newHabits = model.getHabits(habitType)
+    private fun updateHabits(newHabits: List<Habit>) {
         val oldSize = habits.size
 
         updateHabits(oldSize, newHabits)
