@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.Priority
 import kotlinx.android.synthetic.main.fragment_habit.view.*
 import java.util.*
 

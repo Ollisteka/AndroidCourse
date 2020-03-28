@@ -1,6 +1,7 @@
-package com.example.androidcourse
+package com.example.androidcourse.core
 
 import android.content.Context
+import com.example.androidcourse.R
 
 enum class HabitType(val value: Int) {
     Good(0),

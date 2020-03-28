@@ -1,4 +1,4 @@
-package com.example.androidcourse
+package com.example.androidcourse.core
 
 class EXTRA {
     companion object {

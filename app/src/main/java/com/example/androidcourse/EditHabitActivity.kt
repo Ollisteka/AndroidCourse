@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.fragments.EditHabitFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 

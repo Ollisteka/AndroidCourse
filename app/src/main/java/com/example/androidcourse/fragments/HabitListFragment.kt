@@ -1,4 +1,4 @@
-package com.example.androidcourse
+package com.example.androidcourse.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +10,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidcourse.IHabitsObservable
+import com.example.androidcourse.IHabitsObserver
+import com.example.androidcourse.MyHabitRecyclerViewAdapter
+import com.example.androidcourse.R
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.viewmodels.HabitsViewModel
 import kotlinx.android.synthetic.main.fragment_habit_list.*
 import kotlin.math.abs
 import kotlin.math.min

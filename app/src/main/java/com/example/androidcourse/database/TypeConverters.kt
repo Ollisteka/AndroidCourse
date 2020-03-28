@@ -1,6 +1,8 @@
-package com.example.androidcourse
+package com.example.androidcourse.database
 
 import androidx.room.TypeConverter
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.core.Priority
 import java.util.*
 
 class PriorityConverter {

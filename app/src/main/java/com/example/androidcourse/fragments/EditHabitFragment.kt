@@ -1,4 +1,4 @@
-package com.example.androidcourse
+package com.example.androidcourse.fragments
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,7 +10,11 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.androidcourse.R
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.databinding.FragmentEditHabitBinding
+import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 
 
@@ -78,11 +82,17 @@ class EditHabitFragment : Fragment() {
     }
 
     private fun setRepetitionLabel() {
-        val pluralTimes = resources.getQuantityString(R.plurals.times, model.repetitions ?: getString(R.string.numberHint).toInt())
+        val pluralTimes = resources.getQuantityString(
+            R.plurals.times, model.repetitions ?: getString(
+                R.string.numberHint
+            ).toInt())
         habitRepetitionLabel.text = getString(R.string.timesEvery, pluralTimes)
     }
 
     private fun setPeriodicityLabel() {
-        habitPeriodicityLabel.text = resources.getQuantityString(R.plurals.days, model.periodicity ?: getString(R.string.numberHint).toInt())
+        habitPeriodicityLabel.text = resources.getQuantityString(
+            R.plurals.days, model.periodicity ?: getString(
+                R.string.numberHint
+            ).toInt())
     }
 }

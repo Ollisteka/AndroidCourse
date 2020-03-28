@@ -1,4 +1,4 @@
-package com.example.androidcourse
+package com.example.androidcourse.core
 
 enum class Priority(val value: Int) {
     Low(0),

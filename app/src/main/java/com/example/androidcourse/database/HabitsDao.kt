@@ -1,7 +1,8 @@
-package com.example.androidcourse
+package com.example.androidcourse.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.androidcourse.core.Habit
 
 
 @Dao

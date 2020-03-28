@@ -1,9 +1,13 @@
-package com.example.androidcourse
+package com.example.androidcourse.viewmodels
 
 import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModel
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.core.Priority
+import com.example.androidcourse.R
 import java.util.*
 
 class EditableHabitViewModel : ViewModel() {
@@ -58,7 +62,17 @@ class EditableHabitViewModel : ViewModel() {
     }
 
     fun getHabit(): Habit {
-        return Habit(name, description, priority, type, repetitions ?: 10, periodicity ?: 10, color, id, creationDate)
+        return Habit(
+            name,
+            description,
+            priority,
+            type,
+            repetitions ?: 10,
+            periodicity ?: 10,
+            color,
+            id,
+            creationDate
+        )
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {
