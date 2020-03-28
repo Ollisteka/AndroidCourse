@@ -6,7 +6,6 @@ import android.widget.RadioGroup
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import java.util.*
 
 
 class HabitsViewModel(application: Application) : AndroidViewModel(application) {
@@ -71,14 +70,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         return filtered.sortedWith(comparator)
     }
 
-    fun addOrUpdate(newHabit: Habit) {
-        val existingHabit = getIndexedHabit(newHabit.id)
-        if (existingHabit != null) {
-            habitsDao?.update(newHabit)
-        } else {
-            habitsDao?.insert(newHabit)
-        }
-    }
+    fun addOrUpdate(newHabit: Habit) = habitsDao?.upsert(newHabit)
 
     private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
@@ -97,8 +89,6 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         ascSort.remove(fn)
         _searchWord.value = _searchWord.value
     }
-
-    private fun getIndexedHabit(id: UUID): IndexedValue<Habit>? = habitsList.withIndex().find { it.value.id == id }
 
     val periodicitySortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
         when (checkedId) {
