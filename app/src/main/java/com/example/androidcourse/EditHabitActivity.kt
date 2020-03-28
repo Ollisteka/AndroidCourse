@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.fragments.EditHabitFragment
 import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,6 +40,8 @@ class EditHabitActivity : AppCompatActivity() {
 
         if (!intent.hasExtra(EXTRA.HABIT_ID)) {
             supportActionBar?.title = getString(R.string.newHabitActivity_barTitle)
+            val type = intent.getIntExtra(EXTRA.HABIT_TYPE, 0)
+            editHabitFragment.update(HabitType.getByValue(type))
             return
         }
 

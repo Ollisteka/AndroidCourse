@@ -62,8 +62,17 @@ class EditHabitFragment : Fragment() {
         setPeriodicityLabel()
     }
 
+    fun update(habitType: HabitType) {
+        model.type = habitType
+        update()
+    }
+
     fun update(habitId: UUID) {
         model.update(habitId)
+        update()
+    }
+
+    private fun update() {
         binding.invalidateAll()
 
         habitTypeRadio.check(
@@ -75,7 +84,6 @@ class EditHabitFragment : Fragment() {
 
         habitPriority.setSelection(model.priority.value)
     }
-
 
     fun saveHabit() = model.saveHabit()
 

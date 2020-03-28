@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
+import com.example.androidcourse.core.EXTRA
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.viewmodels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
@@ -67,8 +69,22 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             tab.text = if (position == 0) getString(R.string.tab_name_good) else getString(R.string.tab_name_bad)
         }.attach()
 
+        var currentHabitType = HabitType.Good
+        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                currentHabitType = if (tab?.position == 0) HabitType.Good else HabitType.Bad
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                currentHabitType = if (tab?.position == 0) HabitType.Good else HabitType.Bad
+            }
+        })
+
         addHabitButton.setOnClickListener {
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
+            sendIntent.putExtra(EXTRA.HABIT_TYPE, currentHabitType.value)
             startActivity(sendIntent)
         }
 
