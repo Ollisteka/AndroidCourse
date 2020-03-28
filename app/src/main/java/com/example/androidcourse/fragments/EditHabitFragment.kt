@@ -11,11 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.androidcourse.R
-import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.databinding.FragmentEditHabitBinding
 import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
+import java.util.*
 
 
 class EditHabitFragment : Fragment() {
@@ -62,8 +62,8 @@ class EditHabitFragment : Fragment() {
         setPeriodicityLabel()
     }
 
-    fun update(habitToEdit: Habit) {
-        model.update(habitToEdit)
+    fun update(habitId: UUID) {
+        model.update(habitId)
         binding.invalidateAll()
 
         habitTypeRadio.check(

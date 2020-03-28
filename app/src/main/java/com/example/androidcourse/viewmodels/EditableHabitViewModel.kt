@@ -54,7 +54,8 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun update(habit: Habit) {
+    fun update(habitId: UUID) {
+        val habit = habitsDao?.findById(habitId) ?: return
         name = habit.name
         description = habit.description
         priority = habit.priority

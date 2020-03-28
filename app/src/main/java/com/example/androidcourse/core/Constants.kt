@@ -2,6 +2,6 @@ package com.example.androidcourse.core
 
 class EXTRA {
     companion object {
-        const val NEW_HABIT = "com.example.androidcourse.NEW_HABIT"
+        const val HABIT_ID = "com.example.androidcourse.HABIT_ID"
     }
 }

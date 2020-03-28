@@ -6,11 +6,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.androidcourse.core.EXTRA
-import com.example.androidcourse.core.Habit
 import com.example.androidcourse.fragments.EditHabitFragment
 import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
+import java.util.*
 
 class EditHabitActivity : AppCompatActivity() {
     private lateinit var editHabitFragment: EditHabitFragment;
@@ -37,14 +37,14 @@ class EditHabitActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setDisplayShowHomeEnabled(true);
 
-        if (!intent.hasExtra(EXTRA.NEW_HABIT)) {
+        if (!intent.hasExtra(EXTRA.HABIT_ID)) {
             supportActionBar?.title = getString(R.string.newHabitActivity_barTitle)
             return
         }
 
         supportActionBar?.title = getString(R.string.editHabitActivity_barTitle)
 
-        val habitToEdit = intent.getParcelableExtra<Habit>(EXTRA.NEW_HABIT) ?: return
-        editHabitFragment.update(habitToEdit)
+        val habitId = intent.getSerializableExtra(EXTRA.HABIT_ID) ?: return
+        editHabitFragment.update(habitId as UUID)
     }
 }
