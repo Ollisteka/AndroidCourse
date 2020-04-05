@@ -19,10 +19,9 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
     private var ascSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
     private var descSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
 
-    private var habitsList: MutableList<Habit> = habitsDao?.habits?.value?.toMutableList() ?: mutableListOf()
     val habitsByType = mutableMapOf<HabitType, MutableLiveData<List<Habit>>>(
-        HabitType.Bad to MutableLiveData(getHabits(HabitType.Bad)),
-        HabitType.Good to MutableLiveData(getHabits(HabitType.Good))
+        HabitType.Bad to MutableLiveData(getHabits(habitsDao?.habits?.value, HabitType.Bad)),
+        HabitType.Good to MutableLiveData(getHabits(habitsDao?.habits?.value, HabitType.Good))
     )
 
     private var _searchWord = MutableLiveData("")
@@ -40,20 +39,19 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
                 updateSource(it, habitType)
             }
             addSource(_searchWord) {
-                habitsByType[habitType]?.value = getHabits(habitType)
+                updateSource(habitsDao.habits?.value, habitType)
             }
         }
     }
 
     private fun updateSource(newHabits: List<Habit>?, habitType: HabitType) {
-        habitsList = newHabits?.toMutableList() ?: mutableListOf()
-        habitsByType[habitType]?.value = getHabits(habitType)
+        habitsByType[habitType]?.value = getHabits(newHabits, habitType)
     }
 
     private fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord, true)
 
-    private fun getHabits(habitType: HabitType): List<Habit> {
-        val filtered = habitsList.filter { it.type == habitType && matches(it) }
+    private fun getHabits(newHabits: List<Habit>?, habitType: HabitType): List<Habit> {
+        val filtered = newHabits?.filter { it.type == habitType && matches(it) }
 
         val comparator = if (ascSort.size > 0) {
             var comparator = compareBy(*(ascSort.toTypedArray()))
@@ -71,7 +69,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         } else {
             compareBy(Habit::creationDate)
         }
-        return filtered.sortedWith(comparator)
+        return filtered?.sortedWith(comparator) ?: listOf()
     }
 
     private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
