@@ -2,11 +2,9 @@ package com.example.androidcourse.viewmodels
 
 import android.app.Application
 import android.text.TextUtils
-import android.widget.RadioGroup
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.androidcourse.R
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.database.HabitsDatabase
@@ -72,37 +70,21 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         return filtered?.sortedWith(comparator) ?: listOf()
     }
 
-    private fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
+    fun <T : Comparable<T>> sortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
         ascSort.add(fn)
         _searchWord.value = _searchWord.value
     }
 
-    private fun <T : Comparable<T>> sortByDesc(fn: Habit.() -> T) {
+    fun <T : Comparable<T>> sortByDesc(fn: Habit.() -> T) {
         ascSort.remove(fn)
         descSort.add(fn)
         _searchWord.value = _searchWord.value
     }
 
-    private fun <T : Comparable<T>> clearSortBy(fn: Habit.() -> T) {
+    fun <T : Comparable<T>> clearSortBy(fn: Habit.() -> T) {
         descSort.remove(fn)
         ascSort.remove(fn)
         _searchWord.value = _searchWord.value
-    }
-
-    val periodicitySortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
-        when (checkedId) {
-            R.id.radio_periodicity_asc -> sortBy(Habit::periodicity)
-            R.id.radio_periodicity_desc -> sortByDesc(Habit::periodicity)
-            R.id.radio_periodicity_none -> clearSortBy(Habit::periodicity)
-        }
-    }
-
-    val nameSortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
-        when (checkedId) {
-            R.id.radio_name_asc -> sortBy(Habit::name)
-            R.id.radio_name_desc -> sortByDesc(Habit::name)
-            R.id.radio_name_none -> clearSortBy(Habit::name)
-        }
     }
 }

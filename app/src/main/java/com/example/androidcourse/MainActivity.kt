@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.RadioGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
 import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.viewmodels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -88,8 +90,8 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             startActivity(sendIntent)
         }
 
-        nameRadio.setOnCheckedChangeListener(model.nameSortListener)
-        periodicityRadio.setOnCheckedChangeListener(model.periodicitySortListener)
+        nameRadio.setOnCheckedChangeListener(nameSortListener)
+        periodicityRadio.setOnCheckedChangeListener(periodicitySortListener)
 
         sheetBehavior = BottomSheetBehavior.from(filterBottomSheet)
         sheetBehavior.addBottomSheetCallback(bottomSliderCallback)
@@ -130,6 +132,22 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             isCollapsedFromBackPress = true
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private val periodicitySortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
+        when (checkedId) {
+            R.id.radio_periodicity_asc -> model.sortBy(Habit::periodicity)
+            R.id.radio_periodicity_desc -> model.sortByDesc(Habit::periodicity)
+            R.id.radio_periodicity_none -> model.clearSortBy(Habit::periodicity)
+        }
+    }
+
+    private val nameSortListener = RadioGroup.OnCheckedChangeListener { _, checkedId ->
+        when (checkedId) {
+            R.id.radio_name_asc -> model.sortBy(Habit::name)
+            R.id.radio_name_desc -> model.sortByDesc(Habit::name)
+            R.id.radio_name_none -> model.clearSortBy(Habit::name)
         }
     }
 }
