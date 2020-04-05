@@ -12,9 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
+import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.viewmodels.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
@@ -31,11 +34,6 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
     private val habitsWatchersByType: MutableMap<HabitType, IHabitsObserver> = mutableMapOf()
     private val model: HabitsViewModel by viewModels()
-
-    private val dataSetChangedObserver = Observer<Any> {
-        habitsWatchersByType[HabitType.Bad]?.notifyDataSetHasChanged()
-        habitsWatchersByType[HabitType.Good]?.notifyDataSetHasChanged()
-    }
 
     private lateinit var sheetBehavior: BottomSheetBehavior<View>
     private var isCollapsedFromBackPress: Boolean = false
@@ -71,12 +69,24 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
             tab.text = if (position == 0) getString(R.string.tab_name_good) else getString(R.string.tab_name_bad)
         }.attach()
 
+        var currentHabitType = HabitType.Good
+        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                currentHabitType = if (tab?.position == 0) HabitType.Good else HabitType.Bad
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                currentHabitType = if (tab?.position == 0) HabitType.Good else HabitType.Bad
+            }
+        })
+
         addHabitButton.setOnClickListener {
             val sendIntent = Intent(applicationContext, EditHabitActivity::class.java)
+            sendIntent.putExtra(EXTRA.HABIT_TYPE, currentHabitType.value)
             startActivity(sendIntent)
         }
-
-        model.dataSetChanged.observe(this, dataSetChangedObserver)
 
         nameRadio.setOnCheckedChangeListener(model.nameSortListener)
         periodicityRadio.setOnCheckedChangeListener(model.periodicitySortListener)
@@ -105,26 +115,6 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         habitsWatchersByType[observer.habitType] = observer
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-
-        intent?.getParcelableExtra<Habit?>(EXTRA.NEW_HABIT)?.let { addOrUpdate(it) }
-    }
-
-    private fun addOrUpdate(newHabit: Habit) {
-        val existingHabit = model.findById(newHabit.id)
-        if (existingHabit != null) {
-            val oldType = existingHabit.type
-            if (oldType != newHabit.type || !model.matches(newHabit)) {
-                habitsWatchersByType[oldType]?.onHabitDelete(existingHabit.id)
-            }
-        }
-        model.addOrUpdate(newHabit)
-        if (model.matches(newHabit))
-            habitsWatchersByType[newHabit.type]?.onHabitEdit(newHabit.id)
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_about -> startActivity(Intent(applicationContext, AboutActivity::class.java))
@@ -141,11 +131,5 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        model.dataSetChanged.removeObserver(dataSetChangedObserver)
     }
 }

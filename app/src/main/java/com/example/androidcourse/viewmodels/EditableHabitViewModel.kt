@@ -1,12 +1,21 @@
-package com.example.androidcourse
+package com.example.androidcourse.viewmodels
 
+import android.app.Application
 import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.example.androidcourse.R
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.core.Priority
+import com.example.androidcourse.database.HabitsDatabase
 import java.util.*
 
-class EditableHabitViewModel : ViewModel() {
+class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
+    private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
+    private val habitsDao = db?.habitsDao()
+
     var name: String = ""
     var description: String = ""
     var priority: Priority = Priority.Low
@@ -15,6 +24,7 @@ class EditableHabitViewModel : ViewModel() {
     var periodicity: Int? = null
     var color: String = "#388E3C"
     private var id: UUID = UUID.randomUUID()
+    var creationDate: Calendar = Calendar.getInstance()
 
     var stringRepetitions: String
         get() = repetitions?.toString() ?: ""
@@ -44,7 +54,8 @@ class EditableHabitViewModel : ViewModel() {
         }
     }
 
-    fun update(habit: Habit) {
+    fun update(habitId: UUID) {
+        val habit = habitsDao?.findById(habitId) ?: return
         name = habit.name
         description = habit.description
         priority = habit.priority
@@ -52,11 +63,26 @@ class EditableHabitViewModel : ViewModel() {
         repetitions = habit.repetitions
         periodicity = habit.periodicity
         color = habit.color
+        creationDate = habit.creationDate
         id = habit.id
     }
 
-    fun getHabit(): Habit {
-        return Habit(name, description, priority, type, repetitions ?: 10, periodicity ?: 10, color, id)
+    private fun getHabit(): Habit {
+        return Habit(
+            name,
+            description,
+            priority,
+            type,
+            repetitions ?: 10,
+            periodicity ?: 10,
+            color,
+            id,
+            creationDate
+        )
+    }
+
+    fun saveHabit() {
+        habitsDao?.upsert(getHabit())
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {

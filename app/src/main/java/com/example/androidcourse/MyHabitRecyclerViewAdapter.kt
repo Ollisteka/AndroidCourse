@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidcourse.core.EXTRA
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.Priority
 import kotlinx.android.synthetic.main.fragment_habit.view.*
 import java.util.*
 
@@ -24,7 +27,7 @@ class MyHabitRecyclerViewAdapter(
         return HabitViewHolder(view).listen { position, _ ->
             val habit = habits[position];
             val sendIntent = Intent(view.context, EditHabitActivity::class.java)
-            sendIntent.putExtra(EXTRA.NEW_HABIT, habit)
+            sendIntent.putExtra(EXTRA.HABIT_ID, habit.id)
             view.context.startActivity(sendIntent)
         }
     }

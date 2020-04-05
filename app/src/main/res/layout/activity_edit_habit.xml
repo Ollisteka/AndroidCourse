@@ -18,8 +18,8 @@
 
         <fragment
                 android:id="@+id/editHabitView"
-                android:name="com.example.androidcourse.EditHabitFragment"
-                class="com.example.androidcourse.EditHabitFragment"
+                android:name="com.example.androidcourse.fragments.EditHabitFragment"
+                class="com.example.androidcourse.fragments.EditHabitFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_edit_habit" />
