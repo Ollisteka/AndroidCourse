@@ -5,11 +5,15 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.R
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.HabitsDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
@@ -82,7 +86,9 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun saveHabit() {
-        habitsDao?.upsert(getHabit())
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { habitsDao?.upsert(getHabit()) }
+        }
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {
