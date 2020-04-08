@@ -17,9 +17,11 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
     private var ascSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
     private var descSort: MutableList<Habit.() -> Comparable<*>> = mutableListOf()
 
+    private var habitsToFilter: MutableList<Habit> = mutableListOf()
+
     val habitsByType = mutableMapOf<HabitType, MutableLiveData<List<Habit>>>(
-        HabitType.Bad to MutableLiveData(getHabits(habitsDao?.habits?.value, HabitType.Bad)),
-        HabitType.Good to MutableLiveData(getHabits(habitsDao?.habits?.value, HabitType.Good))
+        HabitType.Bad to MutableLiveData(listOf()),
+        HabitType.Good to MutableLiveData(listOf())
     )
 
     private var _searchWord = MutableLiveData("")
@@ -34,16 +36,13 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
     fun initObserve(habitType: HabitType): MediatorLiveData<List<Habit>> {
         return MediatorLiveData<List<Habit>>().apply {
             addSource(habitsDao?.habits!!) {
-                updateSource(it, habitType)
+                habitsToFilter = it.toMutableList()
+                habitsByType[habitType]?.value = getHabits(it, habitType)
             }
             addSource(_searchWord) {
-                updateSource(habitsDao.habits?.value, habitType)
+                habitsByType[habitType]?.value = getHabits(habitsToFilter, habitType)
             }
         }
-    }
-
-    private fun updateSource(newHabits: List<Habit>?, habitType: HabitType) {
-        habitsByType[habitType]?.value = getHabits(newHabits, habitType)
     }
 
     private fun matches(habit: Habit): Boolean = TextUtils.isEmpty(searchWord) || habit.name.contains(searchWord, true)
