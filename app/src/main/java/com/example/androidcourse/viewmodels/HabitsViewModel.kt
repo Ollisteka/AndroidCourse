@@ -5,9 +5,14 @@ import android.text.TextUtils
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.database.HabitsDatabase
+import com.example.androidcourse.network.isOnline
+import com.example.androidcourse.network.service
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class HabitsViewModel(application: Application) : AndroidViewModel(application) {
@@ -32,6 +37,15 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
                 _searchWord.value = value
             }
         }
+
+    init {
+        if (isOnline(application.applicationContext)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val habits = service.getHabits()
+                habits.map { habitsDao?.upsert(it) }
+            }
+        }
+    }
 
     fun initObserve(habitType: HabitType): MediatorLiveData<List<Habit>> {
         return MediatorLiveData<List<Habit>>().apply {
