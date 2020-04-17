@@ -2,7 +2,6 @@ package com.example.androidcourse
 
 
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class MyHabitRecyclerViewAdapter(
             habitId = habit.id
             nameView.text = habit.name
             descriptionView.text = habit.description
-            colors.map { it.setBackgroundColor(Color.parseColor(habit.color)) }
+            colors.map { it.setBackgroundColor(habit.color) }
             middlePriorityView.visibility = if (habit.priority < Priority.Middle) View.INVISIBLE else View.VISIBLE
             highPriorityView.visibility = if (habit.priority < Priority.High) View.INVISIBLE else View.VISIBLE
 

@@ -24,7 +24,7 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     var type: HabitType = HabitType.Good
     var repetitions: Int? = null
     var periodicity: Int? = null
-    var color: String = "#388E3C"
+    var color: Int = -13070788
     private var id: UUID = UUID.randomUUID()
     var creationDate: Calendar = Calendar.getInstance()
 

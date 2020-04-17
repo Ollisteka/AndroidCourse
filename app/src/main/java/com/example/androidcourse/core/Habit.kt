@@ -22,7 +22,7 @@ class Habit(
     val repetitions: Int = 10,
     @SerializedName("frequency")
     val periodicity: Int = 2,
-    val color: String = "#388E3C",
+    val color: Int = -13070788,
     @PrimaryKey
     @SerializedName("uid")
     val id: UUID = UUID.randomUUID(),
