@@ -25,7 +25,7 @@ class MyHabitRecyclerViewAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_habit, parent, false)
         return HabitViewHolder(view).listen { position, _ ->
-            val habit = habits[position];
+            val habit = habits[position]
             val sendIntent = Intent(view.context, EditHabitActivity::class.java)
             sendIntent.putExtra(EXTRA.HABIT_ID, habit.id)
             view.context.startActivity(sendIntent)
