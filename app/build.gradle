@@ -63,4 +63,7 @@ dependencies {
     //database
     implementation "androidx.room:room-runtime:$room_version"
     kapt  "androidx.room:room-compiler:$room_version"
+
+    //network
+    implementation "com.google.code.gson:gson:2.8.5"
 }

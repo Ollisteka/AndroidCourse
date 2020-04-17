@@ -5,7 +5,7 @@ import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import java.util.*
 
-class PriorityConverter {
+open class PriorityConverter {
     @TypeConverter
     fun fromPriority(priority: Priority): Int {
         return priority.value
@@ -17,7 +17,7 @@ class PriorityConverter {
     }
 }
 
-class HabitTypeConverter {
+open class HabitTypeConverter {
     @TypeConverter
     fun fromHabitType(habitType: HabitType): Int {
         return habitType.value
@@ -29,7 +29,7 @@ class HabitTypeConverter {
     }
 }
 
-class CalendarConverter {
+open class CalendarConverter {
     @TypeConverter
     fun fromTimestamp(value: Long?): Calendar? = value?.let {
         GregorianCalendar().also { calendar ->
@@ -41,7 +41,7 @@ class CalendarConverter {
     fun toTimestamp(timestamp: Calendar?): Long? = timestamp?.timeInMillis
 }
 
-class UUIDConverter {
+open class UUIDConverter {
     @TypeConverter
     fun fromUUID(value: UUID): String = value.toString()
 
