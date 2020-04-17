@@ -68,8 +68,7 @@ class EditHabitFragment : Fragment() {
     }
 
     fun update(habitId: UUID) {
-        model.update(habitId)
-        update()
+        model.update(habitId).invokeOnCompletion { update() }
     }
 
     private fun update() {

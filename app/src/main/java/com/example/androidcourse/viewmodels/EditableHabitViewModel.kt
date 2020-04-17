@@ -11,9 +11,7 @@ import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.HabitsDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.util.*
 
 class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
@@ -58,8 +56,16 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun update(habitId: UUID) {
-        val habit = habitsDao?.findById(habitId) ?: return
+    fun update(habitId: UUID): Job {
+        return viewModelScope.launch(Dispatchers.Main) {
+            val task = async(Dispatchers.IO) { habitsDao?.findById(habitId) }
+            val habit = task.await()
+            if (habit != null)
+                updateUi(habit)
+        }
+    }
+
+    private fun updateUi(habit: Habit) {
         name = habit.name
         description = habit.description
         priority = habit.priority
