@@ -27,5 +27,5 @@ class Habit(
     @SerializedName("uid")
     val id: UUID = UUID.randomUUID(),
     @SerializedName("date")
-    val creationDate: Calendar = Calendar.getInstance()
+    val editDate: Calendar = Calendar.getInstance()
 )

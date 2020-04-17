@@ -26,7 +26,6 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     var periodicity: Int? = null
     var color: Int = -13070788
     private var id: UUID = UUID.randomUUID()
-    var creationDate: Calendar = Calendar.getInstance()
 
     var stringRepetitions: String
         get() = repetitions?.toString() ?: ""
@@ -73,7 +72,6 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         repetitions = habit.repetitions
         periodicity = habit.periodicity
         color = habit.color
-        creationDate = habit.creationDate
         id = habit.id
     }
 
@@ -86,8 +84,7 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
             repetitions ?: 10,
             periodicity ?: 10,
             color,
-            id,
-            creationDate
+            id
         )
     }
 

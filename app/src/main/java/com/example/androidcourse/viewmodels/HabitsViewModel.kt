@@ -64,7 +64,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
             }
             comparator
         } else {
-            compareBy(Habit::creationDate)
+            compareBy(Habit::editDate)
         }
         return filtered?.sortedWith(comparator) ?: listOf()
     }
