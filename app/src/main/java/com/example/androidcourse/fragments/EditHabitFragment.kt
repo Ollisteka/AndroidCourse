@@ -45,13 +45,19 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        habitName.doAfterTextChanged { text -> saveHabitButton.isEnabled = !TextUtils.isEmpty(text) }
-        habitName.onFocusChangeListener = View.OnFocusChangeListener { textView, hasFocus ->
-            if (!hasFocus)
-                habitName.error =
-                    if (TextUtils.isEmpty((textView as EditText).text)) getString(
-                        R.string.required_field_error
-                    ) else null
+        var nameFilled = false
+        var descriptionFilled = false
+
+        habitName.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
+        habitDescription.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
+
+        habitName.doAfterTextChanged { text ->
+            nameFilled = !TextUtils.isEmpty(text)
+            saveHabitButton.isEnabled = nameFilled && descriptionFilled
+        }
+        habitDescription.doAfterTextChanged { text ->
+            descriptionFilled = !TextUtils.isEmpty(text)
+            saveHabitButton.isEnabled = nameFilled && descriptionFilled
         }
 
         habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
@@ -60,6 +66,16 @@ class EditHabitFragment : Fragment() {
 
         setRepetitionLabel()
         setPeriodicityLabel()
+    }
+
+    private fun requiredTextFieldHandler(): (textView: View, hasFocus: Boolean) -> Unit {
+        return { textView, hasFocus ->
+            if (!hasFocus)
+                (textView as EditText).error =
+                    if (TextUtils.isEmpty(textView.text)) getString(
+                        R.string.required_field_error
+                    ) else null
+        }
     }
 
     fun update(habitType: HabitType) {
@@ -90,7 +106,8 @@ class EditHabitFragment : Fragment() {
         val pluralTimes = resources.getQuantityString(
             R.plurals.times, model.repetitions ?: getString(
                 R.string.numberHint
-            ).toInt())
+            ).toInt()
+        )
         habitRepetitionLabel.text = getString(R.string.timesEvery, pluralTimes)
     }
 
@@ -98,6 +115,7 @@ class EditHabitFragment : Fragment() {
         habitPeriodicityLabel.text = resources.getQuantityString(
             R.plurals.days, model.periodicity ?: getString(
                 R.string.numberHint
-            ).toInt())
+            ).toInt()
+        )
     }
 }
