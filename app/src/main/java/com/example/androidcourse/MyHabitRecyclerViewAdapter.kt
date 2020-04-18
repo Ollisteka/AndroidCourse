@@ -2,11 +2,11 @@ package com.example.androidcourse
 
 
 import android.content.Intent
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidcourse.core.EXTRA
 import com.example.androidcourse.core.Habit
@@ -60,7 +60,7 @@ class MyHabitRecyclerViewAdapter(
         }
 
         override fun onLongClick(v: View?): Boolean {
-            Toast.makeText(context, context.resources.getString(R.string.swipe_to_delete), Toast.LENGTH_SHORT).show()
+            showToast(context, R.string.swipe_to_delete, Gravity.CENTER)
             return true
         }
 

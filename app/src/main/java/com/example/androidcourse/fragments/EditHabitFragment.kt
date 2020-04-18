@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,6 +13,7 @@ import androidx.fragment.app.viewModels
 import com.example.androidcourse.R
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.databinding.FragmentEditHabitBinding
+import com.example.androidcourse.showToast
 import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 import java.util.*
@@ -111,7 +111,7 @@ class EditHabitFragment : Fragment() {
             view?.post {
                 saveHabitButton.isEnabled = true
                 saveHabitButton.text = resources.getString(R.string.save)
-                Toast.makeText(context, resources.getString(R.string.error_save), Toast.LENGTH_SHORT).show()
+                showToast(context, R.string.error_save)
             }
         }
         return isSaved

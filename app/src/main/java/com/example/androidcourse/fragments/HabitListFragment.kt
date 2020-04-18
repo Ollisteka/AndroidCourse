@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -86,13 +85,12 @@ class HabitListFragment : Fragment(), IHabitsObserver {
 
     private fun onHabitDeleted(deleted: Boolean, position: Int) {
         if (deleted) {
-            Toast.makeText(context, resources.getString(R.string.delete_success), Toast.LENGTH_SHORT).show()
             showToast(context, R.string.delete_success, Gravity.CENTER)
             viewAdapter.notifyItemRemoved(position)
             return
         }
         viewAdapter.notifyItemChanged(position)
-        Toast.makeText(context, resources.getString(R.string.error_delete), Toast.LENGTH_SHORT).show()
+        showToast(context, R.string.error_delete, Gravity.CENTER)
     }
 
     override fun onAttach(context: Context) {
