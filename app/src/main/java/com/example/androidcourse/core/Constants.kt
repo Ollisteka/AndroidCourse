@@ -9,4 +9,10 @@ class EXTRA {
     }
 }
 
+class LOG_TAGS {
+    companion object {
+        const val NETWORK = "androidcourse.NETWORK"
+    }
+}
+
 val EMPTY_UUID: UUID = UUID.fromString("4ebab42e-5be2-416b-971b-7e292db5946a")

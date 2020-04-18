@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import java.util.*
 
 fun isOnline(context: Context): Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -19,4 +20,8 @@ fun isOnline(context: Context): Boolean {
         val netInfo = cm.activeNetworkInfo
         return netInfo != null && netInfo.isConnectedOrConnecting
     }
+}
+
+class UUIDDto {
+    val uid: UUID = UUID.randomUUID()
 }

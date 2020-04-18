@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -100,7 +101,21 @@ class EditHabitFragment : Fragment() {
         habitPriority.setSelection(model.priority.value)
     }
 
-    fun saveHabit() = model.saveHabit()
+    suspend fun saveHabit(): Boolean {
+        view?.post {
+            saveHabitButton.isEnabled = false
+            saveHabitButton.text = resources.getString(R.string.save_inProcess)
+        }
+        val isSaved = model.saveHabit()
+        if (!isSaved) {
+            view?.post {
+                saveHabitButton.isEnabled = true
+                saveHabitButton.text = resources.getString(R.string.save)
+                Toast.makeText(context, resources.getString(R.string.error_save), Toast.LENGTH_SHORT).show()
+            }
+        }
+        return isSaved
+    }
 
     private fun setRepetitionLabel() {
         val pluralTimes = resources.getQuantityString(

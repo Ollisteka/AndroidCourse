@@ -2,16 +2,19 @@ package com.example.androidcourse.viewmodels
 
 import android.app.Application
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.R
-import com.example.androidcourse.core.Habit
-import com.example.androidcourse.core.HabitType
-import com.example.androidcourse.core.Priority
+import com.example.androidcourse.core.*
 import com.example.androidcourse.database.HabitsDatabase
-import kotlinx.coroutines.*
+import com.example.androidcourse.network.service
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.*
 
 class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,7 +28,7 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     var repetitions: Int? = null
     var periodicity: Int? = null
     var color: Int = -13070788
-    private var id: UUID = UUID.randomUUID()
+    private var id: UUID = EMPTY_UUID
 
     var stringRepetitions: String
         get() = repetitions?.toString() ?: ""
@@ -75,7 +78,7 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         id = habit.id
     }
 
-    private fun getHabit(): Habit {
+    private fun getHabit(uid: UUID): Habit {
         return Habit(
             name,
             description,
@@ -84,14 +87,19 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
             repetitions ?: 10,
             periodicity ?: 10,
             color,
-            id
+            uid
         )
     }
 
-    fun saveHabit() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { habitsDao?.upsert(getHabit()) }
+    suspend fun saveHabit(): Boolean {
+        try {
+            val uidDto = service.addOrUpdateHabit(getHabit(id))
+            habitsDao?.upsert(getHabit(uidDto.uid))
+        } catch (e: Exception) {
+            Log.e(LOG_TAGS.NETWORK, "При сохранении привычки  возникла ошибка", e)
+            return false
         }
+        return true
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {
