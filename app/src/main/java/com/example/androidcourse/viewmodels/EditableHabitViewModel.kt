@@ -2,13 +2,15 @@ package com.example.androidcourse.viewmodels
 
 import android.app.Application
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.R
-import com.example.androidcourse.core.*
+import com.example.androidcourse.core.EMPTY_UUID
+import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.HabitsDatabase
 import com.example.androidcourse.network.service
 import kotlinx.coroutines.Dispatchers
@@ -92,13 +94,9 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     }
 
     suspend fun saveHabit(): Boolean {
-        try {
-            val uidDto = service.addOrUpdateHabit(getHabit(id))
-            habitsDao?.upsert(getHabit(uidDto.uid))
-        } catch (e: Exception) {
-            Log.e(LOG_TAGS.NETWORK, "При сохранении привычки  возникла ошибка", e)
-            return false
-        }
+        val uidDto = service.addOrUpdateHabit(getHabit(id)) ?: return false
+
+        habitsDao?.upsert(getHabit(uidDto.uid))
         return true
     }
 

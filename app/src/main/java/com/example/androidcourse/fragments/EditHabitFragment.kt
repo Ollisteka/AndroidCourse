@@ -112,6 +112,7 @@ class EditHabitFragment : Fragment() {
                 saveHabitButton.isEnabled = true
                 saveHabitButton.text = resources.getString(R.string.save)
                 showToast(context, R.string.error_save)
+                showToast(context, R.string.error_network)
             }
         }
         return isSaved

@@ -1,9 +1,13 @@
 package com.example.androidcourse.network
 
+import android.util.Log
 import com.example.androidcourse.core.Habit
+import com.example.androidcourse.core.LOG_TAGS
+import kotlinx.coroutines.delay
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -39,13 +43,57 @@ private val retrofit = Retrofit.Builder()
 
 interface HabitsService {
     @GET("habit")
-    suspend fun getHabits(): List<Habit>
+    suspend fun getHabits(): Response<List<Habit>>
 
     @PUT("habit")
-    suspend fun addOrUpdateHabit(@Body habit: Habit): UUIDDto
+    suspend fun addOrUpdateHabit(@Body habit: Habit): Response<UUIDDto>
 
     @HTTP(method = "DELETE", path = "habit", hasBody = true)
-    suspend fun deleteHabit(@Body uid: UUIDDto)
+    suspend fun deleteHabit(@Body uid: UUIDDto): Response<Unit>
 }
 
-val service: HabitsService = retrofit.create(HabitsService::class.java)
+class ApiService {
+    private val service: HabitsService = retrofit.create(HabitsService::class.java)
+
+    suspend fun getHabits(): List<Habit>? {
+        return repeatTask { service.getHabits() }
+    }
+
+    suspend fun addOrUpdateHabit(habit: Habit): UUIDDto? {
+        return repeatTask { service.addOrUpdateHabit(habit) }
+    }
+
+    suspend fun deleteHabit(uid: UUIDDto) {
+        repeatTask { service.deleteHabit(uid) }
+    }
+
+    private suspend fun <T> repeatTask(request: suspend () -> Response<T>): T? {
+        val maxTries = 5
+        var tries = 0
+        var isSuccess = false
+        var result: T? = null
+        while (!isSuccess && tries < maxTries) {
+            try {
+                val response = request()
+                if (response.isSuccessful) {
+                    result = response.body()!!
+                } else {
+                    Log.e(LOG_TAGS.NETWORK, response.message())
+                    break
+                }
+                Log.d(LOG_TAGS.NETWORK, "Задача выполнена, попыток: $tries")
+                isSuccess = true
+            } catch (e: Exception) {
+                Log.d(LOG_TAGS.NETWORK, "Задача не выполнена, попытка: $tries", e)
+                tries++
+                delay(2000)
+            }
+        }
+        if (!isSuccess) {
+            Log.e(LOG_TAGS.NETWORK, "Задача не выполнена, попыток: $tries")
+        }
+        return result
+    }
+}
+
+val service = ApiService()

@@ -13,7 +13,6 @@ import com.example.androidcourse.network.isOnline
 import com.example.androidcourse.network.service
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class HabitDeletedEvent(val deleted: Boolean, val position: Int)
 
@@ -53,7 +52,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         if (isOnline(application.applicationContext)) {
             viewModelScope.launch(Dispatchers.IO) {
                 val habits = service.getHabits()
-                habits.map { habitsDao?.upsert(it) }
+                habits?.map { habitsDao?.upsert(it) }
             }
         }
     }
@@ -114,24 +113,12 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
 
     fun deleteHabit(habit: Habit, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val deleted = if (deleteFromServer(habit.id)) {
-                deleteFromDb(habit)
-            } else false
-
+            service.deleteHabit(UUIDDto(habit.id))
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleted = deleteFromDb(habit)
             habitDeleted[habit.type]?.postValue(HabitDeletedEvent(deleted, position))
         }
-    }
-
-    private suspend fun deleteFromServer(id: UUID): Boolean {
-        try {
-            service.deleteHabit(UUIDDto(id))
-        } catch (e: Exception) {
-            // todo научиться различать разные ошибки и желательно в одном месте
-            Log.e(LOG_TAGS.NETWORK, "При удалении привычки  возникла ошибка", e)
-            return false
-        }
-
-        return true
     }
 
     private fun deleteFromDb(id: Habit): Boolean {
