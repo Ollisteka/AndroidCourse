@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 class HabitDeletedEvent(val deleted: Boolean, val position: Int)
 
 class HabitsViewModel(application: Application) : AndroidViewModel(application) {
+    private val app = application
     private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
     private val habitsDao = db?.habitsDao()
 
@@ -48,12 +49,14 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
 
-    init {
-        if (isOnline(application.applicationContext)) {
+    fun importHabits(): Boolean {
+        return if (isOnline(app.applicationContext)) {
             viewModelScope.launch(Dispatchers.IO) {
-                val habits = service.getHabits()
-                habits?.map { habitsDao?.upsert(it) }
+                service.getHabits()?.map { habitsDao?.upsert(it) }
             }
+            true
+        } else {
+            false
         }
     }
 

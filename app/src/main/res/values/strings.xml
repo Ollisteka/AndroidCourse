@@ -46,6 +46,7 @@
     <string name="delete_success">Привычка удалена</string>
 
     <string name="swipe_to_delete">Свайпните, чтобы удалить</string>
+    <string name="menu_item_import">Загрузить с сервера</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
