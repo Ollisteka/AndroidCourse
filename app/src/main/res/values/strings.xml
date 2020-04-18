@@ -40,6 +40,11 @@
     <string name="no_habits">Привычек нет.\nПроверьте фильтр или создайте новые</string>
 
     <string name="error_save">Не удалось сохранить привычку</string>
+    <string name="error_delete">Не удалось удалить привычку</string>
+
+    <string name="delete_success">Привычка удалена</string>
+
+    <string name="swipe_to_delete">Свайпните, чтобы удалить</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>

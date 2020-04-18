@@ -28,4 +28,7 @@ interface HabitsDao {
             update(habit)
         }
     }
+
+    @Delete
+    fun deleteHabit(habit: Habit)
 }

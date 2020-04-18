@@ -11,6 +11,7 @@ class EXTRA {
 
 class LOG_TAGS {
     companion object {
+        const val DATABASE = "androidcourse.DATABASE"
         const val NETWORK = "androidcourse.NETWORK"
     }
 }

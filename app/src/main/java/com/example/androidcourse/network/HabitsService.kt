@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
 
 private const val BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
@@ -19,10 +19,9 @@ private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor(
 
 private val authInterceptor = Interceptor { chain ->
     val originalRequest = chain.request()
-    val builder = originalRequest.newBuilder().header(
-        "Authorization",
-        TOKEN
-    )
+    val builder = originalRequest.newBuilder()
+        .header("Authorization", TOKEN)
+        .header("Content-Type", "application/json")
     val newRequest = builder.build()
     chain.proceed(newRequest)
 }
@@ -42,9 +41,11 @@ interface HabitsService {
     @GET("habit")
     suspend fun getHabits(): List<Habit>
 
-    @Headers("Content-Type: application/json")
     @PUT("habit")
     suspend fun addOrUpdateHabit(@Body habit: Habit): UUIDDto
+
+    @HTTP(method = "DELETE", path = "habit", hasBody = true)
+    suspend fun deleteHabit(@Body uid: UUIDDto)
 }
 
 val service: HabitsService = retrofit.create(HabitsService::class.java)

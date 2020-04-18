@@ -22,6 +22,6 @@ fun isOnline(context: Context): Boolean {
     }
 }
 
-class UUIDDto {
+class UUIDDto(
     val uid: UUID = UUID.randomUUID()
-}
+)

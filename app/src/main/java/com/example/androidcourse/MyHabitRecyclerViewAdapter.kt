@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidcourse.core.EXTRA
 import com.example.androidcourse.core.Habit
@@ -37,7 +38,7 @@ class MyHabitRecyclerViewAdapter(
 
     override fun getItemCount(): Int = habits.size
 
-    inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener {
+    inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener, View.OnLongClickListener {
         private val nameView: TextView = itemView.name
         private val descriptionView: TextView = itemView.description
         private val lowPriorityView: View = itemView.priorityLow
@@ -50,8 +51,17 @@ class MyHabitRecyclerViewAdapter(
 
         private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
 
+        init {
+            itemView.setOnLongClickListener(this)
+        }
+
         override fun onClick(view: View?, position: Int) {
 
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            Toast.makeText(context, context.resources.getString(R.string.swipe_to_delete), Toast.LENGTH_SHORT).show()
+            return true
         }
 
         override fun toString(): String {
