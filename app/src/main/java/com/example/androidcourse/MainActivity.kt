@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
 
         val menu = navDrawer.menu
         menu.findItem(R.id.menu_item_import).isVisible = true
+        menu.findItem(R.id.menu_item_export).isVisible = true
 
         drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         drawerToggle.isDrawerIndicatorEnabled = true
@@ -124,8 +125,12 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_about -> startActivity(Intent(applicationContext, AboutActivity::class.java))
-            R.id.menu_item_import -> {
-                val isSuccess = model.importHabits()
+            R.id.menu_item_import,
+            R.id.menu_item_export -> {
+                val isSuccess = when (item.itemId) {
+                    R.id.menu_item_import -> model.importHabits()
+                    else -> model.exportHabits()
+                }
                 if (!isSuccess) {
                     showToast(applicationContext, R.string.error_network, Gravity.CENTER)
                     return true

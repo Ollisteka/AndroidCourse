@@ -67,6 +67,11 @@ class ApiService {
         repeatTask { service.deleteHabit(uid) }
     }
 
+    suspend fun exportHabits(habitsFromDb: List<Habit>) {
+        val serverHabits = getHabits() ?: listOf()
+        habitsFromDb.intersect(serverHabits).map { service.addOrUpdateHabit(it) }
+    }
+
     private suspend fun <T> repeatTask(request: suspend () -> Response<T>): T? {
         val maxTries = 5
         var tries = 0

@@ -60,6 +60,17 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun exportHabits(): Boolean {
+        return if (isOnline(app.applicationContext)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                service.exportHabits(habitsToFilter)
+            }
+            true
+        } else {
+            false
+        }
+    }
+
     fun initObserve(habitType: HabitType): MediatorLiveData<List<Habit>> {
         return MediatorLiveData<List<Habit>>().apply {
             addSource(habitsDao?.habits!!) {

@@ -47,6 +47,7 @@
 
     <string name="swipe_to_delete">Свайпните, чтобы удалить</string>
     <string name="menu_item_import">Загрузить с сервера</string>
+    <string name="menu_item_export">Загрузить на сервер</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>
