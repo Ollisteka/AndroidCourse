@@ -94,9 +94,12 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     }
 
     suspend fun saveHabit(): Boolean {
-        val uidDto = service.addOrUpdateHabit(getHabit(id)) ?: return false
+        val uidDto = service.addOrUpdateHabit(getHabit(id))
+        // todo выкинуть этот костыль
+        if (uidDto == null && id == EMPTY_UUID)
+            return false
 
-        habitsDao?.upsert(getHabit(uidDto.uid))
+        habitsDao?.upsert(getHabit(uidDto?.uid ?: id))
         return true
     }
 
