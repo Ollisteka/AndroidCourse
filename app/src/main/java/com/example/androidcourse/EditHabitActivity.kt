@@ -25,6 +25,7 @@ class EditHabitActivity : AppCompatActivity() {
             setOnClickListener {
                 GlobalScope.launch {
                     if (editHabitFragment.saveHabit()) {
+                        // todo вот это должно выполняться при сигнале из вьюмодели
                         val sendIntent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(sendIntent)
                     }
