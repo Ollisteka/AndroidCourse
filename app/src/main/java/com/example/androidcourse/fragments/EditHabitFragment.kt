@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import com.example.androidcourse.R
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.databinding.FragmentEditHabitBinding
+import com.example.androidcourse.showToast
 import com.example.androidcourse.viewmodels.EditableHabitViewModel
 import kotlinx.android.synthetic.main.fragment_edit_habit.*
 import java.util.*
@@ -45,13 +46,19 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        habitName.doAfterTextChanged { text -> saveHabitButton.isEnabled = !TextUtils.isEmpty(text) }
-        habitName.onFocusChangeListener = View.OnFocusChangeListener { textView, hasFocus ->
-            if (!hasFocus)
-                habitName.error =
-                    if (TextUtils.isEmpty((textView as EditText).text)) getString(
-                        R.string.required_field_error
-                    ) else null
+        var nameFilled = false
+        var descriptionFilled = false
+
+        habitName.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
+        habitDescription.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
+
+        habitName.doAfterTextChanged { text ->
+            nameFilled = !TextUtils.isEmpty(text)
+            saveHabitButton.isEnabled = nameFilled && descriptionFilled
+        }
+        habitDescription.doAfterTextChanged { text ->
+            descriptionFilled = !TextUtils.isEmpty(text)
+            saveHabitButton.isEnabled = nameFilled && descriptionFilled
         }
 
         habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
@@ -62,14 +69,23 @@ class EditHabitFragment : Fragment() {
         setPeriodicityLabel()
     }
 
+    private fun requiredTextFieldHandler(): (textView: View, hasFocus: Boolean) -> Unit {
+        return { textView, hasFocus ->
+            if (!hasFocus)
+                (textView as EditText).error =
+                    if (TextUtils.isEmpty(textView.text)) getString(
+                        R.string.required_field_error
+                    ) else null
+        }
+    }
+
     fun update(habitType: HabitType) {
         model.type = habitType
         update()
     }
 
     fun update(habitId: UUID) {
-        model.update(habitId)
-        update()
+        model.update(habitId).invokeOnCompletion { update() }
     }
 
     private fun update() {
@@ -85,13 +101,29 @@ class EditHabitFragment : Fragment() {
         habitPriority.setSelection(model.priority.value)
     }
 
-    fun saveHabit() = model.saveHabit()
+    suspend fun saveHabit(): Boolean {
+        view?.post {
+            saveHabitButton.isEnabled = false
+            saveHabitButton.text = resources.getString(R.string.save_inProcess)
+        }
+        val isSaved = model.saveHabit()
+        if (!isSaved) {
+            view?.post {
+                saveHabitButton.isEnabled = true
+                saveHabitButton.text = resources.getString(R.string.save)
+                showToast(context, R.string.error_save)
+                showToast(context, R.string.error_network)
+            }
+        }
+        return isSaved
+    }
 
     private fun setRepetitionLabel() {
         val pluralTimes = resources.getQuantityString(
             R.plurals.times, model.repetitions ?: getString(
                 R.string.numberHint
-            ).toInt())
+            ).toInt()
+        )
         habitRepetitionLabel.text = getString(R.string.timesEvery, pluralTimes)
     }
 
@@ -99,6 +131,7 @@ class EditHabitFragment : Fragment() {
         habitPeriodicityLabel.text = resources.getQuantityString(
             R.plurals.days, model.periodicity ?: getString(
                 R.string.numberHint
-            ).toInt())
+            ).toInt()
+        )
     }
 }

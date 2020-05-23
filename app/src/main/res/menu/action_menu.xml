@@ -8,6 +8,19 @@
             app:showAsAction="never" />
 
     <item
+            android:id="@+id/menu_item_import"
+            android:icon="@drawable/ic_cloud_download_black_24dp"
+            android:title="@string/menu_item_import"
+            android:visible="false"
+            app:showAsAction="ifRoom" />
+    <item
+            android:id="@+id/menu_item_export"
+            android:icon="@drawable/ic_cloud_upload_black_24dp"
+            android:title="@string/menu_item_export"
+            android:visible="false"
+            app:showAsAction="ifRoom" />
+
+    <item
             android:id="@+id/menu_item_about"
             android:icon="@drawable/ic_info_outline_black_24dp"
             android:title="@string/menu_item_about"

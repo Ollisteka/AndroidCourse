@@ -7,13 +7,16 @@ import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.R
+import com.example.androidcourse.core.EMPTY_UUID
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.HabitsDatabase
+import com.example.androidcourse.network.service
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class EditableHabitViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,9 +29,8 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     var type: HabitType = HabitType.Good
     var repetitions: Int? = null
     var periodicity: Int? = null
-    var color: String = "#388E3C"
-    private var id: UUID = UUID.randomUUID()
-    var creationDate: Calendar = Calendar.getInstance()
+    var color: Int = -13070788
+    private var id: UUID = EMPTY_UUID
 
     var stringRepetitions: String
         get() = repetitions?.toString() ?: ""
@@ -58,8 +60,16 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun update(habitId: UUID) {
-        val habit = habitsDao?.findById(habitId) ?: return
+    fun update(habitId: UUID): Job {
+        return viewModelScope.launch(Dispatchers.Main) {
+            val task = async(Dispatchers.IO) { habitsDao?.findById(habitId) }
+            val habit = task.await()
+            if (habit != null)
+                updateUi(habit)
+        }
+    }
+
+    private fun updateUi(habit: Habit) {
         name = habit.name
         description = habit.description
         priority = habit.priority
@@ -67,11 +77,10 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         repetitions = habit.repetitions
         periodicity = habit.periodicity
         color = habit.color
-        creationDate = habit.creationDate
         id = habit.id
     }
 
-    private fun getHabit(): Habit {
+    private fun getHabit(uid: UUID): Habit {
         return Habit(
             name,
             description,
@@ -80,15 +89,18 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
             repetitions ?: 10,
             periodicity ?: 10,
             color,
-            id,
-            creationDate
+            uid
         )
     }
 
-    fun saveHabit() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { habitsDao?.upsert(getHabit()) }
-        }
+    suspend fun saveHabit(): Boolean {
+        val uidDto = service.addOrUpdateHabit(getHabit(id))
+        // todo выкинуть этот костыль
+        if (uidDto == null && id == EMPTY_UUID)
+            return false
+
+        habitsDao?.upsert(getHabit(uidDto?.uid ?: id))
+        return true
     }
 
     val priorityUpdater = object : AdapterView.OnItemSelectedListener {

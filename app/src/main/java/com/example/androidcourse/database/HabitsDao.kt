@@ -12,6 +12,9 @@ interface HabitsDao {
     @get:Query("SELECT * FROM habits")
     val habits: LiveData<List<Habit>>?
 
+    @get:Query("SELECT id FROM habits")
+    val allHabitsIds: List<UUID>?
+
     @Query("SELECT * FROM habits WHERE id=:id ")
     fun findById(id: UUID): Habit?
 
@@ -28,4 +31,7 @@ interface HabitsDao {
             update(habit)
         }
     }
+
+    @Delete
+    fun deleteHabit(habit: Habit)
 }

@@ -7,6 +7,7 @@
     <string name="habitNameHint">Ложиться в 10 вечера</string>
     <string name="habitDescription">Описание</string>
     <string name="save">Сохранить</string>
+    <string name="save_inProcess">Сохранение…</string>
     <string name="habitPriority">Приоритет</string>
     <string name="habitType">Тип</string>
     <string name="good">Хорошая</string>
@@ -37,6 +38,16 @@
     <string name="searchHint">Введите название привычки</string>
     <string name="sorting">Сортировка</string>
     <string name="no_habits">Привычек нет.\nПроверьте фильтр или создайте новые</string>
+
+    <string name="error_save">Не удалось сохранить привычку</string>
+    <string name="error_network">Проверьте интернет соединение</string>
+    <string name="error_delete">Не удалось удалить привычку</string>
+
+    <string name="delete_success">Привычка удалена</string>
+
+    <string name="swipe_to_delete">Свайпните, чтобы удалить</string>
+    <string name="menu_item_import">Загрузить с сервера</string>
+    <string name="menu_item_export">Загрузить на сервер</string>
 
     <string-array name="priority_array">
         <item>Низкий</item>

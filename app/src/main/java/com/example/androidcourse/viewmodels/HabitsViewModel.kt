@@ -2,15 +2,22 @@ package com.example.androidcourse.viewmodels
 
 import android.app.Application
 import android.text.TextUtils
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
+import androidx.lifecycle.*
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
+import com.example.androidcourse.core.LOG_TAGS
 import com.example.androidcourse.database.HabitsDatabase
+import com.example.androidcourse.network.UUIDDto
+import com.example.androidcourse.network.isOnline
+import com.example.androidcourse.network.service
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+class HabitDeletedEvent(val deleted: Boolean, val position: Int)
 
 class HabitsViewModel(application: Application) : AndroidViewModel(application) {
+    private val app = application
     private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
     private val habitsDao = db?.habitsDao()
 
@@ -24,6 +31,15 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         HabitType.Good to MutableLiveData(listOf())
     )
 
+    private val habitDeleted = mutableMapOf<HabitType, MutableLiveData<HabitDeletedEvent>>(
+        HabitType.Bad to MediatorLiveData(),
+        HabitType.Good to MediatorLiveData()
+    )
+
+    fun onHabitDeleted(type: HabitType): LiveData<HabitDeletedEvent>? {
+        return habitDeleted[type]
+    }
+
     private var _searchWord = MutableLiveData("")
     var searchWord: String
         get() = _searchWord.value ?: ""
@@ -32,6 +48,28 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
                 _searchWord.value = value
             }
         }
+
+    fun importHabits(): Boolean {
+        return if (isOnline(app.applicationContext)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                service.getHabits()?.map { habitsDao?.upsert(it) }
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    fun exportHabits(): Boolean {
+        return if (isOnline(app.applicationContext)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                service.exportHabits(habitsToFilter)
+            }
+            true
+        } else {
+            false
+        }
+    }
 
     fun initObserve(habitType: HabitType): MediatorLiveData<List<Habit>> {
         return MediatorLiveData<List<Habit>>().apply {
@@ -64,7 +102,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
             }
             comparator
         } else {
-            compareBy(Habit::creationDate)
+            compareBy(Habit::editDate)
         }
         return filtered?.sortedWith(comparator) ?: listOf()
     }
@@ -85,5 +123,25 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
         descSort.remove(fn)
         ascSort.remove(fn)
         _searchWord.value = _searchWord.value
+    }
+
+    fun deleteHabit(habit: Habit, position: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            service.deleteHabit(UUIDDto(habit.id))
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleted = deleteFromDb(habit)
+            habitDeleted[habit.type]?.postValue(HabitDeletedEvent(deleted, position))
+        }
+    }
+
+    private fun deleteFromDb(id: Habit): Boolean {
+        try {
+            habitsDao?.deleteHabit(id)
+        } catch (e: Exception) {
+            Log.e(LOG_TAGS.DATABASE, "При удалении привычки  возникла ошибка", e)
+            return false
+        }
+        return true
     }
 }

@@ -3,6 +3,7 @@ package com.example.androidcourse
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -106,6 +107,10 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
         searchEdit.doAfterTextChanged { text -> model.searchWord = text.toString() }
         searchEdit.setText(model.searchWord)
 
+        val menu = navDrawer.menu
+        menu.findItem(R.id.menu_item_import).isVisible = true
+        menu.findItem(R.id.menu_item_export).isVisible = true
+
         drawerToggle = ActionBarDrawerToggle(this, navDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer)
         drawerToggle.isDrawerIndicatorEnabled = true
         navDrawerLayout.addDrawerListener(drawerToggle)
@@ -120,6 +125,17 @@ class MainActivity : AppCompatActivity(), IHabitsObservable, NavigationView.OnNa
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_about -> startActivity(Intent(applicationContext, AboutActivity::class.java))
+            R.id.menu_item_import,
+            R.id.menu_item_export -> {
+                val isSuccess = when (item.itemId) {
+                    R.id.menu_item_import -> model.importHabits()
+                    else -> model.exportHabits()
+                }
+                if (!isSuccess) {
+                    showToast(applicationContext, R.string.error_network, Gravity.CENTER)
+                    return true
+                }
+            }
         }
 
         navDrawerLayout.closeDrawer(GravityCompat.START)

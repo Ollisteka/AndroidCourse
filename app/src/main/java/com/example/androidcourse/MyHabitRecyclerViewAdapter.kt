@@ -2,7 +2,7 @@ package com.example.androidcourse
 
 
 import android.content.Intent
-import android.graphics.Color
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +25,7 @@ class MyHabitRecyclerViewAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_habit, parent, false)
         return HabitViewHolder(view).listen { position, _ ->
-            val habit = habits[position];
+            val habit = habits[position]
             val sendIntent = Intent(view.context, EditHabitActivity::class.java)
             sendIntent.putExtra(EXTRA.HABIT_ID, habit.id)
             view.context.startActivity(sendIntent)
@@ -38,7 +38,7 @@ class MyHabitRecyclerViewAdapter(
 
     override fun getItemCount(): Int = habits.size
 
-    inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener {
+    inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), OnItemClickListener, View.OnLongClickListener {
         private val nameView: TextView = itemView.name
         private val descriptionView: TextView = itemView.description
         private val lowPriorityView: View = itemView.priorityLow
@@ -51,8 +51,17 @@ class MyHabitRecyclerViewAdapter(
 
         private val colors = listOf(lowPriorityView, middlePriorityView, highPriorityView)
 
+        init {
+            itemView.setOnLongClickListener(this)
+        }
+
         override fun onClick(view: View?, position: Int) {
 
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            showToast(context, R.string.swipe_to_delete, Gravity.CENTER)
+            return true
         }
 
         override fun toString(): String {
@@ -63,7 +72,7 @@ class MyHabitRecyclerViewAdapter(
             habitId = habit.id
             nameView.text = habit.name
             descriptionView.text = habit.description
-            colors.map { it.setBackgroundColor(Color.parseColor(habit.color)) }
+            colors.map { it.setBackgroundColor(habit.color) }
             middlePriorityView.visibility = if (habit.priority < Priority.Middle) View.INVISIBLE else View.VISIBLE
             highPriorityView.visibility = if (habit.priority < Priority.High) View.INVISIBLE else View.VISIBLE
 
