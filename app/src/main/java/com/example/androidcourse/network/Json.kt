@@ -1,6 +1,5 @@
 package com.example.androidcourse.network
 
-import com.example.androidcourse.core.EMPTY_UUID
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.CalendarConverter
@@ -55,8 +54,7 @@ class UUIDAdapter : UUIDConverter(), JsonDeserializer<UUID>, JsonSerializer<UUID
     }
 
     override fun serialize(src: UUID?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
-        // todo выкинуть этот костыль
-        if (src == null || src == EMPTY_UUID)
+        if (src == null)
             return JsonNull.INSTANCE
         return JsonPrimitive(fromUUID(src))
     }

@@ -8,6 +8,7 @@ import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.LOG_TAGS
 import com.example.androidcourse.database.HabitsDatabase
+import com.example.androidcourse.network.HabitMapper
 import com.example.androidcourse.network.UUIDDto
 import com.example.androidcourse.network.isOnline
 import com.example.androidcourse.network.service
@@ -52,7 +53,7 @@ class HabitsViewModel(application: Application) : AndroidViewModel(application) 
     fun importHabits(): Boolean {
         return if (isOnline(app.applicationContext)) {
             viewModelScope.launch(Dispatchers.IO) {
-                service.getHabits()?.map { habitsDao?.upsert(it) }
+                service.getHabits()?.map { habitsDao?.upsert(HabitMapper.fromDto(it)) }
             }
             true
         } else {

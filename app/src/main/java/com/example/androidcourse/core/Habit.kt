@@ -7,25 +7,19 @@ import com.example.androidcourse.database.CalendarConverter
 import com.example.androidcourse.database.HabitTypeConverter
 import com.example.androidcourse.database.PriorityConverter
 import com.example.androidcourse.database.UUIDConverter
-import com.google.gson.annotations.SerializedName
 import java.util.*
 
 @Entity(tableName = "habits")
 @TypeConverters(PriorityConverter::class, HabitTypeConverter::class, CalendarConverter::class, UUIDConverter::class)
 class Habit(
-    @SerializedName("title")
     val name: String,
     val description: String,
     val priority: Priority = Priority.Low,
     val type: HabitType = HabitType.Good,
-    @SerializedName("count")
     val repetitions: Int = 10,
-    @SerializedName("frequency")
     val periodicity: Int = 2,
     val color: Int = -13070788,
     @PrimaryKey
-    @SerializedName("uid")
     val id: UUID = UUID.randomUUID(),
-    @SerializedName("date")
     val editDate: Calendar = Calendar.getInstance()
 )

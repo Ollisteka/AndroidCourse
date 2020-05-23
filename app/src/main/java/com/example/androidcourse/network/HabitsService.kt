@@ -43,10 +43,10 @@ private val retrofit = Retrofit.Builder()
 
 interface HabitsService {
     @GET("habit")
-    suspend fun getHabits(): Response<List<Habit>>
+    suspend fun getHabits(): Response<List<HabitDto>>
 
     @PUT("habit")
-    suspend fun addOrUpdateHabit(@Body habit: Habit): Response<UUIDDto>
+    suspend fun addOrUpdateHabit(@Body habit: HabitDto): Response<UUIDDto>
 
     @HTTP(method = "DELETE", path = "habit", hasBody = true)
     suspend fun deleteHabit(@Body uid: UUIDDto): Response<Unit>
@@ -55,11 +55,11 @@ interface HabitsService {
 class ApiService {
     private val service: HabitsService = retrofit.create(HabitsService::class.java)
 
-    suspend fun getHabits(): List<Habit>? {
+    suspend fun getHabits(): List<HabitDto>? {
         return repeatTask { service.getHabits() }
     }
 
-    suspend fun addOrUpdateHabit(habit: Habit): UUIDDto? {
+    suspend fun addOrUpdateHabit(habit: HabitDto): UUIDDto? {
         return repeatTask { service.addOrUpdateHabit(habit) }
     }
 
@@ -69,7 +69,9 @@ class ApiService {
 
     suspend fun exportHabits(habitsFromDb: List<Habit>) {
         val serverHabits = getHabits() ?: listOf()
-        habitsFromDb.intersect(serverHabits).map { service.addOrUpdateHabit(it) }
+        habitsFromDb.map { HabitMapper.toDto(it) }
+            .intersect(serverHabits)
+            .map { service.addOrUpdateHabit(it) }
     }
 
     private suspend fun <T> repeatTask(request: suspend () -> Response<T>): T? {

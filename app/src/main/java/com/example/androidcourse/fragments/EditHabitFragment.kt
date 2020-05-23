@@ -46,24 +46,26 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var nameFilled = false
-        var descriptionFilled = false
-
         habitName.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
         habitDescription.onFocusChangeListener = View.OnFocusChangeListener(requiredTextFieldHandler())
 
-        habitName.doAfterTextChanged { text ->
-            nameFilled = !TextUtils.isEmpty(text)
-            saveHabitButton.isEnabled = nameFilled && descriptionFilled
+        habitName.doAfterTextChanged { _ ->
+            saveHabitButton.isEnabled = model.requiredFieldsFilled()
         }
-        habitDescription.doAfterTextChanged { text ->
-            descriptionFilled = !TextUtils.isEmpty(text)
-            saveHabitButton.isEnabled = nameFilled && descriptionFilled
+        habitDescription.doAfterTextChanged { _ ->
+            saveHabitButton.isEnabled = model.requiredFieldsFilled()
         }
 
-        habitRepetitions.doAfterTextChanged { setRepetitionLabel() }
-        habitPeriodicity.doAfterTextChanged { setPeriodicityLabel() }
+        habitRepetitions.doAfterTextChanged {
+            setRepetitionLabel()
+            saveHabitButton.isEnabled = model.requiredFieldsFilled()
+        }
+        habitPeriodicity.doAfterTextChanged {
+            setPeriodicityLabel()
+            saveHabitButton.isEnabled = model.requiredFieldsFilled()
+        }
         habitPriority.onItemSelectedListener = model.priorityUpdater
+        saveHabitButton.isEnabled = model.requiredFieldsFilled()
 
         setRepetitionLabel()
         setPeriodicityLabel()
@@ -80,7 +82,7 @@ class EditHabitFragment : Fragment() {
     }
 
     fun update(habitType: HabitType) {
-        model.type = habitType
+        model.habit.type = habitType
         update()
     }
 
@@ -92,13 +94,13 @@ class EditHabitFragment : Fragment() {
         binding.invalidateAll()
 
         habitTypeRadio.check(
-            when (model.type) {
+            when (model.habit.type) {
                 HabitType.Bad -> R.id.radio_bad
                 HabitType.Good -> R.id.radio_good
             }
         )
 
-        habitPriority.setSelection(model.priority.value)
+        habitPriority.setSelection(model.habit.priority.value)
     }
 
     suspend fun saveHabit(): Boolean {
@@ -120,7 +122,7 @@ class EditHabitFragment : Fragment() {
 
     private fun setRepetitionLabel() {
         val pluralTimes = resources.getQuantityString(
-            R.plurals.times, model.repetitions ?: getString(
+            R.plurals.times, model.habit.repetitions ?: getString(
                 R.string.numberHint
             ).toInt()
         )
@@ -129,7 +131,7 @@ class EditHabitFragment : Fragment() {
 
     private fun setPeriodicityLabel() {
         habitPeriodicityLabel.text = resources.getQuantityString(
-            R.plurals.days, model.periodicity ?: getString(
+            R.plurals.days, model.habit.periodicity ?: getString(
                 R.string.numberHint
             ).toInt()
         )

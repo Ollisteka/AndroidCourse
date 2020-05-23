@@ -7,11 +7,12 @@ import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidcourse.R
-import com.example.androidcourse.core.EMPTY_UUID
 import com.example.androidcourse.core.Habit
 import com.example.androidcourse.core.HabitType
 import com.example.androidcourse.core.Priority
 import com.example.androidcourse.database.HabitsDatabase
+import com.example.androidcourse.network.HabitDto
+import com.example.androidcourse.network.HabitMapper
 import com.example.androidcourse.network.service
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,37 +24,30 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     private val db = HabitsDatabase.getInstance(getApplication<Application>().applicationContext)
     private val habitsDao = db?.habitsDao()
 
-    var name: String = ""
-    var description: String = ""
-    var priority: Priority = Priority.Low
-    var type: HabitType = HabitType.Good
-    var repetitions: Int? = null
-    var periodicity: Int? = null
-    var color: Int = -13070788
-    private var id: UUID = EMPTY_UUID
+    var habit: HabitDto = HabitDto()
 
     var stringRepetitions: String
-        get() = repetitions?.toString() ?: ""
+        get() = habit.repetitions?.toString() ?: ""
         set(value) {
             if (TextUtils.isEmpty(value))
                 return
             val int = Integer.parseInt(value)
-            if (int != repetitions)
-                repetitions = int
+            if (int != habit.repetitions)
+                habit.repetitions = int
         }
 
     var stringPeriodicity: String
-        get() = periodicity?.toString() ?: ""
+        get() = habit.periodicity?.toString() ?: ""
         set(value) {
             if (TextUtils.isEmpty(value))
                 return
             val int = Integer.parseInt(value)
-            if (int != periodicity)
-                periodicity = int
+            if (int != habit.periodicity)
+                habit.periodicity = int
         }
 
     fun setType(checkedRadioId: Int) {
-        type = when (checkedRadioId) {
+        habit.type = when (checkedRadioId) {
             R.id.radio_bad -> HabitType.Bad
             R.id.radio_good -> HabitType.Good
             else -> throw Exception("You forgot to create new HabitType or handle it here")
@@ -70,36 +64,21 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
     }
 
     private fun updateUi(habit: Habit) {
-        name = habit.name
-        description = habit.description
-        priority = habit.priority
-        type = habit.type
-        repetitions = habit.repetitions
-        periodicity = habit.periodicity
-        color = habit.color
-        id = habit.id
-    }
-
-    private fun getHabit(uid: UUID): Habit {
-        return Habit(
-            name,
-            description,
-            priority,
-            type,
-            repetitions ?: 10,
-            periodicity ?: 10,
-            color,
-            uid
-        )
+        this.habit.name = habit.name
+        this.habit.description = habit.description
+        this.habit.priority = habit.priority
+        this.habit.type = habit.type
+        this.habit.repetitions = habit.repetitions
+        this.habit.periodicity = habit.periodicity
+        this.habit.color = habit.color
+        this.habit.id = habit.id
     }
 
     suspend fun saveHabit(): Boolean {
-        val uidDto = service.addOrUpdateHabit(getHabit(id))
-        // todo выкинуть этот костыль
-        if (uidDto == null && id == EMPTY_UUID)
-            return false
+        val uidDto = service.addOrUpdateHabit(habit) ?: return false
 
-        habitsDao?.upsert(getHabit(uidDto?.uid ?: id))
+        habit.id = uidDto.uid;
+        habitsDao?.upsert(HabitMapper.fromDto(habit))
         return true
     }
 
@@ -108,8 +87,11 @@ class EditableHabitViewModel(application: Application) : AndroidViewModel(applic
         }
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position != priority.value)
-                priority = Priority.getByValue(position)
+            if (position != habit.priority.value)
+                habit.priority = Priority.getByValue(position)
         }
     }
+
+    fun requiredFieldsFilled() =
+        !TextUtils.isEmpty(habit.name) && !TextUtils.isEmpty(habit.description) && habit.repetitions != null && habit.periodicity != null
 }
